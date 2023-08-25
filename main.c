@@ -1,69 +1,58 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <time.h>
 
-// Function to generate a random password
-void generateRandomPassword(char *password, int length) {
-    const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    srand(time(NULL));
-
-    for (int i = 0; i < length; i++) {
-        int index = rand() % (sizeof(charset) - 1);
-        password[i] = charset[index];
-    }
-
-    password[length] = '\0';
-}
-
-// Function to save a password
-void savePassword(const char *username, const char *password) {
+void savepassword(char username[], char password[])
+{
     FILE *file = fopen("passwords.txt", "a");
-
-    if (file != NULL) {
-        fprintf(file, "%s:%s\n", username, password);
-        fclose(file);
-        printf("Password saved successfully.\n");
-    } else {
-        printf("Error: Unable to save password.\n");
-    }
+    fprintf(file, "%s:%s\n", username, password);
+    fclose(file);
+    printf("Password Saved Successfully\n");
 }
 
-// Function to retrieve passwords
-void retrievePasswords(const char *username) {
-    FILE *file = fopen("passwords.txt", "r");
-
-    if (file != NULL) {
-        char line[100];
-        while (fgets(line, sizeof(line), file)) {
-            char *storedUsername = strtok(line, ":");
-            char *storedPassword = strtok(NULL, "\n");
-
-            if (strcmp(username, storedUsername) == 0) {
-                printf("Username: %s, Password: %s\n", storedUsername, storedPassword);
-            }
+int main()
+{
+    printf("Do you want to create a new password or view an existing one?\n");
+    printf("1. Save a new password\n");
+    printf("2. View an existing password\n");
+    printf("3. Genereate a new Strong Password\n");
+    printf("4. Exit\n");
+    int choice;
+    while (choice != 4)
+    {
+        printf("\n\n");
+        printf("Enter your choice : ");
+        scanf("%d", &choice);
+        printf("\n");
+        char username[100];
+        char password[100];
+        switch (choice)
+        {
+        case 1:
+            printf("Enter the Username : ");
+            scanf("%s", username);
+            printf("Enter the Password : ");
+            scanf("%s", password);
+            printf("\n");
+            savepassword(username, password);
+            break;
+        // case 2:
+        //     printf("Enter the Username :");
+        //     scanf("%s", username);
+        //     retrievepassword(username);
+        //     break;
+        // case 3:
+        //     printf("Enter the Username :");
+        //     scanf("%s", username);
+        //     printf("Generating Password...\n");
+        //     generatepassword(username);
+        case 4:
+            printf("Exiting...\n");
+            break;
+        default:
+            printf("Invalid Choice\n");
+            break;
         }
-        fclose(file);
-    } else {
-        printf("Error: Unable to retrieve passwords.\n");
     }
-}
-
-int main() {
-    char username[50];
-    char password[50];
-
-    printf("Welcome to Password-Manager\n");
-    printf("Enter your username: ");
-    scanf("%s", username);
-
-    generateRandomPassword(password, 10);
-    printf("Generated Password: %s\n", password);
-
-    savePassword(username, password);
-
-    printf("Passwords for user %s:\n", username);
-    retrievePasswords(username);
-
-    return 0;
 }
