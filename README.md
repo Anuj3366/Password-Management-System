@@ -8,7 +8,7 @@ Trying Making a project that uses markup and programming language together
 
 ### Navigate using the website name not the username as a person can have multiple accounts with the same username (Nearly Completed)
 
-### Add privacy while writing password, no one can see that you wrote
+### Add privacy while writing password, no one can see that you wrote (Will try it later because Windows and Linux required different library to be imported and not touched those yet)
 
 ### Add encryption and decryption to the saved password and give the option to make its key to the user
 
