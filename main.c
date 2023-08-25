@@ -15,7 +15,7 @@ void generatepassword(char url[], char username[]) {
     FILE *file = fopen("passwords.xls", "a");
     char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$^&*_+:?></'=~";
     int length = 10;
-    char password[length + 1];  // +1 for null terminator
+    char password[length + 1];
     srand(time(NULL));
     for (int i = 0; i < length; i++) {
         password[i] = charset[rand() % (strlen(charset))];
