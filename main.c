@@ -5,8 +5,8 @@
 #include <stdbool.h>
 
 void enterurl(char url[]);
-void enterusername(char url[],char username[]);
-void enterpassword(char url[],char username[],char password[]);
+void enterusername(char url[], char username[]);
+void enterpassword(char url[], char username[], char password[]);
 bool passwordstrength(char url[], char username[], char password[]);
 bool idexists(char url[], char username[]);
 bool passwordexists(char url[], char username[], char password[]);
@@ -20,7 +20,7 @@ void enterurl(char url[])
     scanf("%s", url);
 }
 
-void enterusername(char url[],char username[])
+void enterusername(char url[], char username[])
 {
     printf("Enter the Username : ");
     scanf("%s", username);
@@ -31,32 +31,6 @@ void enterusername(char url[],char username[])
         scanf("%d", &choice);
         if (choice == 1)
         {
-            printf("Overwriting...\n");
-            FILE *file = fopen("passwords.xls", "r");
-            FILE *file2 = fopen("passwords2.xls", "a");
-            char line[300];
-            while (fgets(line, sizeof(line), file))
-            {
-                char url2[100];
-                char username2[100];
-                char password2[100];
-                if (sscanf(line, "%99[^||]||%99[^||]||%99s", url2, username2, password2) == 3)
-                {
-                    if (strcmp(url2, url) == 0 && strcmp(username2, username) == 0)
-                    {
-                        fprintf(file2, "%s||%s||%s\n", url, username);
-                    }
-                    else
-                    {
-                        fprintf(file2, "%s||%s||%s\n", url2, username2, password2);
-                    }
-                }
-            }
-            fclose(file);
-            fclose(file2);
-            remove("passwords.xls");
-            rename("passwords2.xls", "passwords.xls");
-            printf("Password Saved Successfully\n");
             return;
         }
         else
@@ -68,7 +42,8 @@ void enterusername(char url[],char username[])
     }
 }
 
-void enterpassword(char url[],char username[],char password[]){
+void enterpassword(char url[], char username[], char password[])
+{
     printf("Enter the Password : ");
     scanf("%s", password);
     while (passwordstrength(url, username, password))
@@ -81,57 +56,45 @@ void enterpassword(char url[],char username[],char password[]){
         printf("Password is not strong enough, please enter a new password or write exit to exit : ");
         scanf("%s", password);
     }
-    while(passwordexists(url, username, password))
-    {
-        printf("Password already exists , would you like to overwrite it or retrieve it? (1 for overwrite and any other number for retrieve)\n");
-        int choice;
-        scanf("%d", &choice);
-        if (choice == 1)
-        {
-            printf("Overwriting...\n");
-            FILE *file = fopen("passwords.xls", "r");
-            FILE *file2 = fopen("passwords2.xls", "a");
-            char line[300];
-            while (fgets(line, sizeof(line), file))
-            {
-                char url2[100];
-                char username2[100];
-                char password2[100];
-                if (sscanf(line, "%99[^||]||%99[^||]||%99s", url2, username2, password2) == 3)
-                {
-                    if (strcmp(url2, url) == 0 && strcmp(username2, username) == 0)
-                    {
-                        fprintf(file2, "%s||%s||%s\n", url, username, password);
-                    }
-                    else
-                    {
-                        fprintf(file2, "%s||%s||%s\n", url2, username2, password2);
-                    }
-                }
-            }
-            fclose(file);
-            fclose(file2);
-            remove("passwords.xls");
-            rename("passwords2.xls", "passwords.xls");
-            printf("Password Saved Successfully\n");
-            return;
-        }
-        else
-        {
-            printf("Retrieving...\n");
-            retrievepassword(url, username);
-            return;
-        }
-    }
-    while (passwordstrength(url, username, password) || passwordexists(url, username, password))
+    while (passwordexists(url, username, password))
     {
         if (strcmp(password, "exit") == 0)
         {
             printf("Exiting...\n");
             return;
         }
-        printf("Password or username already exists or is not strong enough, please enter a new password or write exit to exit : ");
+        printf("Password already exists , please enter a new password or write exit to exit : ");
         scanf("%s", password);
+    }
+    if (idexists(url, username))
+    {
+        printf("Overwriting...\n");
+        FILE *file = fopen("passwords.xls", "r");
+        FILE *file2 = fopen("passwords2.xls", "a");
+        char line[300];
+        while (fgets(line, sizeof(line), file))
+        {
+            char url2[100];
+            char username2[100];
+            char password2[100];
+            if (sscanf(line, "%99[^||]||%99[^||]||%99s", url2, username2, password2) == 3)
+            {
+                if (strcmp(url2, url) == 0 && strcmp(username2, username) == 0)
+                {
+                    fprintf(file2, "%s||%s||%s\n", url, username, password);
+                }
+                else
+                {
+                    fprintf(file2, "%s||%s||%s\n", url2, username2, password2);
+                }
+            }
+        }
+        fclose(file);
+        fclose(file2);
+        remove("passwords.xls");
+        rename("passwords2.xls", "passwords.xls");
+        printf("Password Saved Successfully\n");
+        return;
     }
 }
 
@@ -211,7 +174,7 @@ bool passwordexists(char url[], char username[], char password[])
 
 void savepassword(char url[], char username[], char password[])
 {
-    FILE *file = fopen("passwords.xls", "a");
+    FILE *file = fopen("passwords.xls","a");
     fprintf(file, "%s||%s||%s\n", url, username, password);
     fclose(file);
     printf("Password Saved Successfully\n");
@@ -220,18 +183,29 @@ void savepassword(char url[], char username[], char password[])
 void generatepassword(char url[], char username[])
 {
     FILE *file = fopen("passwords.xls", "a");
-    char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$^&*_+:?></'=~";
+    char charset[] = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$^&*_+:?></'=~";
+    char charset1[] = "0123456789";
+    char charset2[] = "abcdefghijklmnopqrstuvwxyz";
+    char charset3[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    char charset4[] = "!@#$^&*_+:?></'=~";
     int length = 10;
     char password[length + 1];
     srand(time(NULL));
-    while (!passwordstrength(url, username, password))
+    for (int i = 0; i < length;)
     {
-        for (int i = 0; i < length; i++)
-        {
-            password[i] = charset[rand() % (strlen(charset))];
-        }
-        password[length] = '\0';
+        password[i++] = charset1[rand() % (sizeof(charset1) - 1)];
+        password[i++] = charset2[rand() % (sizeof(charset2) - 1)];
+        password[i++] = charset3[rand() % (sizeof(charset3) - 1)];
+        password[i++] = charset4[rand() % (sizeof(charset4) - 1)];
+        password[i++] = charset[rand() % (sizeof(charset) - 1)];
     }
+    for(int i = 0;i<length;i++){
+        int j = rand() % length;
+        password[i] = password[j]^password[i];
+        password[j] = password[j]^password[i];
+        password[i] = password[j]^password[i];
+    }
+    password[length] = '\0';
     printf("Your password is %s for the username %s & URL %s. Now saving it\n", password, username, url);
     savepassword(url, username, password);
 }
