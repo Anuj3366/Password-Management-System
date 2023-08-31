@@ -7,7 +7,7 @@
 void enterwebsite(char website[]);
 void enterusername(char website[], char username[], char password[]);
 void enterpassword(char website[], char username[], char password[]);
-bool passwordstrength(char website[], char username[], char password[]);
+bool passwordstrength(char password[]);
 bool idexists(char website[], char username[]);
 bool passwordexists(char website[], char username[], char password[]);
 void savepassword(char website[], char username[], char password[]);
@@ -18,13 +18,14 @@ void enterwebsite(char website[])
 {
     printf("Enter the website's URL: ");
     scanf("%99s", website);
-    if (strstr(website, ".") != NULL && (strstr(website, "https://") == website || strstr(website, "www.") == website))
+    while(strstr(website, ".") == NULL && (strstr(website, "https://") != website || strstr(website, "www.") != website))
     {
-        return;
-    }
-    else
-    {
-        enterwebsite(website);
+        if(website == "exit"){
+            printf("Exiting...\n");
+            return;
+        }
+        printf("Invalid website's URL, Enter correct website's URL Again: ");
+        scanf("%99s", website);
     }
 }
 
@@ -55,7 +56,7 @@ void enterpassword(char website[], char username[], char password[])
 {
     printf("Enter the Password (8-10 characters with letters, digits, and special characters): ");
     scanf("%99s", password);
-    while ((strlen(password) < 8 || strlen(password) > 10) || passwordstrength(website, username, password) || passwordexists(website, username, password))
+    while ((strlen(password) < 8 || strlen(password) > 10) || passwordstrength(password) || passwordexists(website, username, password))
     {
         printf("Invalid input or password already exists, please enter a valid password or write exit to exit : ");
         scanf("%99s", password);
@@ -97,7 +98,7 @@ void enterpassword(char website[], char username[], char password[])
     }
 }
 
-bool passwordstrength(char website[], char username[], char password[])
+bool passwordstrength(char password[])
 {
     bool isStrong = true;
     int length = strlen(password);
@@ -109,10 +110,6 @@ bool passwordstrength(char website[], char username[], char password[])
             strchr("!@#$^&*_+:?></'=~", password[i]))
         {
             isStrong = true;
-        }
-        else if (strstr(password, username) != NULL || strstr(password, website) != NULL)
-        {
-            return false;
         }
         else
         {
@@ -255,6 +252,8 @@ int main()
         {
         case 1:
             enterwebsite(website);
+            if(strcmp(website, "exit") == 0)
+                break;
             enterusername(website, username, password);
             if (strcmp(password, "exit") == 0)
                 break;
@@ -266,11 +265,17 @@ int main()
             break;
         case 2:
             enterwebsite(website);
+            if(strcmp(website, "exit") == 0)
+                break;
             enterusername(website, username, password);
+            if (strcmp(password, "exit") == 0)
+                break;
             retrievepassword(website, username);
             break;
         case 3:
             enterwebsite(website);
+            if(strcmp(website, "exit") == 0)
+                break;
             enterusername(website, username, password);
             printf("Generating Password...\n");
             generatepassword(website, username);
