@@ -40,6 +40,11 @@ int enterusername(char *website, char *username, char *password)
 {
     printf("Enter the Username : ");
     scanf("%s", username);
+    if(strcmp(username, "exit") == 0)
+    {
+        printf("\nExiting...\n");
+        return 1;
+    }
     if (idexists(website, username))
     {
         printf("\nThe username already exists. Would you like to Update it (press `1`) or retrieve it (press anything else)?\n");
@@ -80,7 +85,7 @@ int enterpassword(char *website, char *username, char *password)
     }
     if (idexists(website, username))
     {
-        printf("\nOverwriting...\n");
+        printf("\nUpdating...\n");
         FILE *file = fopen("passwords.xls", "r");
         FILE *file2 = fopen("passwords2.xls", "a");
         char line[300];
@@ -106,6 +111,7 @@ int enterpassword(char *website, char *username, char *password)
         remove("passwords.xls");
         rename("passwords2.xls", "passwords.xls");
         printf("\nPassword Saved Successfully\n");
+        return 1;
     }
     return 0;
 }
@@ -177,7 +183,7 @@ bool passwordexists(char *website, char *username, char *password)
 
 void savepassword(char *website, char *username, char *password)
 {
-    FILE *file = fopen("passwords.xls", "w");
+    FILE *file = fopen("passwords.xls", "a+");
     fprintf(file, "%s||%s||%s\n", website, username, password);
     fclose(file);
     printf("\nPassword Saved Successfully\n");
@@ -185,7 +191,7 @@ void savepassword(char *website, char *username, char *password)
 
 void generatepassword(char *website, char *username)
 {
-    FILE *file = fopen("passwords.xls", "w");
+    FILE *file = fopen("passwords.xls", "a+");
     char charset[] = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$^&*_+:?></'=~";
     int length = 10;
     char password[length + 1];
