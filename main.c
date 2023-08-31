@@ -18,7 +18,7 @@ void enterwebsite(char website[])
 {
     printf("Enter the website's URL: ");
     scanf("%99s", website);
-    while (strstr(website, ".") == NULL && strlen(website)>6 && (strstr(website, "https://") != website || strstr(website, "www.") != website))
+    while (strstr(website, ".") == NULL || strlen(website) <= 6 || (strstr(website, "https://") != website || strstr(website, "www.") != website))
     {
         if (strcmp(website, "exit") == 0)
         {
@@ -57,6 +57,11 @@ void enterpassword(char website[], char username[], char password[])
 {
     printf("Enter the Password (8-10 characters with letters, digits, and special characters): ");
     scanf("%99s", password);
+    if (strcmp(password, "exit") == 0)
+    {
+        printf("Exiting...\n");
+        return;
+    }
     while ((strlen(password) < 8 || strlen(password) > 10) || !passwordstrength(password) || passwordexists(website, username, password))
     {
         printf("Invalid input or password already exists, please enter a valid password or write exit to exit : ");
@@ -246,7 +251,8 @@ int main()
         printf("3. Generate a new strong password.\n");
         printf("\n\n");
         printf("Enter your choice : ");
-        if(scanf("%d", &choice) == 0){
+        if (scanf("%d", &choice) == 0)
+        {
             printf("Exiting...\n");
             return 0;
         }
