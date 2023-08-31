@@ -17,16 +17,20 @@ void retrievepassword(char *website, char *username);
 void enterwebsite(char *website)
 {
     printf("Enter the website's URL: ");
-    scanf("%s", website);
-    while (strstr(website, ".") == NULL || strlen(website) <= 6 ||
-           (strstr(website, "https://") == NULL && strstr(website, "www.") == NULL))
+    while (scanf("%s", website) == 0 || strcmp(website, "exit") == 0)
+    {
+        printf("Please enter a valid website's URL.\n");
+        printf("Enter the website's URL: ");
+    }
+    while (strlen(website) <= 6 || (strstr(website, "https://") == NULL && strstr(website, "www.") == NULL))
     {
         if (strcmp(website, "exit") == 0)
         {
             printf("Exiting...\n");
-            return;
+            exit(0);
         }
-        printf("Invalid website's URL, Enter correct website's URL Again: ");
+        printf("The website's URL is not valid. Please enter a valid website's URL.\n");
+        printf("Enter the website's URL: ");
         scanf("%s", website);
     }
 }
@@ -48,8 +52,7 @@ void enterusername(char *website, char *username, char *password)
         {
             printf("Retrieving...\n");
             retrievepassword(website, username);
-            strcpy(username, "exit");
-            return;
+            exit(0);
         }
     }
 }
@@ -101,7 +104,7 @@ void enterpassword(char *website, char *username, char *password)
         remove("passwords.xls");
         rename("passwords2.xls", "passwords.xls");
         printf("Password Saved Successfully\n");
-        strcpy(password, "exit");
+        exit(0);
         return;
     }
 }
@@ -173,7 +176,7 @@ bool passwordexists(char *website, char *username, char *password)
 
 void savepassword(char *website, char *username, char *password)
 {
-    FILE *file = fopen("passwords.xls", "a");
+    FILE *file = fopen("passwords.xls", "w");
     fprintf(file, "%s||%s||%s\n", website, username, password);
     fclose(file);
     printf("Password Saved Successfully\n");
@@ -181,7 +184,7 @@ void savepassword(char *website, char *username, char *password)
 
 void generatepassword(char *website, char *username)
 {
-    FILE *file = fopen("passwords.xls", "a");
+    FILE *file = fopen("passwords.xls", "w");
     char charset[] = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$^&*_+:?></'=~";
     int length = 10;
     char password[length + 1];
@@ -241,6 +244,7 @@ void retrievepassword(char *website, char *username)
 
 int main()
 {
+    system("clear");
     printf("Welcome to the Password Management System.\n\n");
     int choice;
     while (1)
@@ -269,31 +273,18 @@ int main()
             return 0;
         case 1:
             enterwebsite(website);
-            if (strcmp(website, "exit") == 0)
-                continue;
             enterusername(website, username, password);
-            if (strcmp(username, "0") == 0)
-                continue;
             enterpassword(website, username, password);
-            if (strcmp(password, "exit") == 0)
-                continue;
             savepassword(website, username, password);
             break;
         case 2:
             enterwebsite(website);
-            if (strcmp(website, "exit") == 0)
-                continue;
-            enterusername(website, username, password);
-            if (strcmp(username, "0") == 0)
-                continue;
+            printf("Enter the Username : ");
+            scanf("%s", username);
             retrievepassword(website, username);
-            if (strcmp(password, "exit") == 0)
-                continue;
             break;
         case 3:
             enterwebsite(website);
-            if (strcmp(website, "exit") == 0)
-                continue;
             enterusername(website, username, password);
             printf("Generating Password...\n");
             generatepassword(website, username);
@@ -302,6 +293,7 @@ int main()
             printf("Invalid Choice\n");
             break;
         }
+        system("clear");
     }
     return 0;
 }
