@@ -279,12 +279,12 @@ int main()
             {
                 break;
             }
-            enterusername(website, username, password);
+            b = enterusername(website, username, password);
             if (b == 1)
             {
                 break;
             }
-            enterpassword(website, username, password);
+            b = enterpassword(website, username, password);
             if (b == 1)
             {
                 break;
@@ -307,7 +307,7 @@ int main()
             {
                 break;
             }
-            enterusername(website, username, password);
+            b = enterusername(website, username, password);
             if (b == 1)
             {
                 break;
