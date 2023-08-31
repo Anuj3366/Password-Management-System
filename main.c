@@ -18,7 +18,8 @@ void enterwebsite(char website[])
 {
     printf("Enter the website's URL: ");
     scanf("%99s", website);
-    while (strstr(website, ".") == NULL || strlen(website) <= 6 || (strstr(website, "https://") != website || strstr(website, "www.") != website))
+    while (strstr(website, ".") == NULL || strlen(website) <= 6 ||
+           (strstr(website, "https://") == NULL && strstr(website, "www.") == NULL))
     {
         if (strcmp(website, "exit") == 0)
         {
@@ -243,7 +244,7 @@ int main()
     int choice;
     while (1)
     {
-        printf("\n");
+        printf("\n\n");
         printf("Please select an option:\n");
         printf("0. To exit from here type exit or 0, type \"exit\" to return to this menu at any time.\n");
         printf("1. Create a new password and save it securely.\n");
