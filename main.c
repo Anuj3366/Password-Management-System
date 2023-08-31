@@ -18,7 +18,7 @@ void retrievepassword(char *website, char *username);
 int enterwebsite(char *website)
 {
     printf("Enter the website's URL: ");
-    while (scanf("%s", website) == 0 || strcmp(website, "exit") == 1)
+    while (strcmp(website, "exit") == 1)
     {
         printf("\nPlease enter a valid website URL. The URL should include either \"%s\" or \"%s\", and it should be longer than 6 characters.\n", "https://", "www.");
         printf("Enter the website's valid URL: ");
