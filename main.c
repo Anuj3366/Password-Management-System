@@ -19,30 +19,30 @@ int enterwebsite(char *website)
 {
     printf("Enter the website's URL: ");
     scanf("%s", website);
-    while (strcmp(website, "exit") == 1)
+    if (strcmp(website, "exit") == 0)
     {
-        printf("\nPlease enter a valid website URL. The URL should include either \"%s\" or \"%s\", and it should be longer than 6 characters.\n", "https://", "www.");
-        printf("Enter the website's valid URL: ");
-        scanf("%s", website);
+        printf("\nExiting...\n");
+        return 1;
     }
     while (strlen(website) <= 6 || (strstr(website, "https://") == NULL && strstr(website, "www.") == NULL))
     {
+        printf("\nThe website's URL is not valid. Please enter a valid website's URL.\n");
+        printf("Enter the website's URL: ");
+        scanf("%s", website);
         if (strcmp(website, "exit") == 0)
         {
             printf("\nExiting...\n");
             return 1;
         }
-        printf("\nThe website's URL is not valid. Please enter a valid website's URL.\n");
-        printf("Enter the website's URL: ");
-        scanf("%s", website);
     }
+    return 0;
 }
 
 int enterusername(char *website, char *username, char *password)
 {
     printf("Enter the Username : ");
     scanf("%s", username);
-    if(strcmp(username, "exit") == 0)
+    if (strcmp(username, "exit") == 0)
     {
         printf("\nExiting...\n");
         return 1;
