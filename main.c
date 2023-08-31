@@ -20,17 +20,17 @@ int enterwebsite(char *website)
     printf("Enter the website's URL: ");
     while (scanf("%s", website) == 0 || strcmp(website, "exit") == 1)
     {
-        printf("Please enter a valid website URL. The URL should include either \"%s\" or \"%s\", and it should be longer than 6 characters.\n", "https://", "www.");
+        printf("\nPlease enter a valid website URL. The URL should include either \"%s\" or \"%s\", and it should be longer than 6 characters.\n", "https://", "www.");
         printf("Enter the website's valid URL: ");
     }
     while (strlen(website) <= 6 || (strstr(website, "https://") == NULL && strstr(website, "www.") == NULL))
     {
         if (strcmp(website, "exit") == 0)
         {
-            printf("Exiting...\n");
+            printf("\nExiting...\n");
             return 1;
         }
-        printf("The website's URL is not valid. Please enter a valid website's URL.\n");
+        printf("\nThe website's URL is not valid. Please enter a valid website's URL.\n");
         printf("Enter the website's URL: ");
         scanf("%s", website);
     }
@@ -42,7 +42,8 @@ int enterusername(char *website, char *username, char *password)
     scanf("%s", username);
     if (idexists(website, username))
     {
-        printf("The username already exists. Would you like to Update it (press `1`) or retrieve it (press anything else)?\n");
+        printf("\nThe username already exists. Would you like to Update it (press `1`) or retrieve it (press anything else)?\n");
+        printf("Enter your choice : ");
         int choice;
         scanf("%d", &choice);
         if (choice == 1)
@@ -69,7 +70,7 @@ int enterpassword(char *website, char *username, char *password)
     }
     while ((strlen(password) < 8 || strlen(password) > 10) || !passwordstrength(password) || passwordexists(website, username, password))
     {
-        printf("Invalid input or password already exists, please enter a valid password or write exit to exit : ");
+        printf("\nInvalid input or password already exists, please enter a valid password or write exit to exit : ");
         scanf("%s", password);
         if (strcmp(password, "exit") == 0)
         {
@@ -179,7 +180,7 @@ void savepassword(char *website, char *username, char *password)
     FILE *file = fopen("passwords.xls", "w");
     fprintf(file, "%s||%s||%s\n", website, username, password);
     fclose(file);
-    printf("Password Saved Successfully\n");
+    printf("\nPassword Saved Successfully\n");
 }
 
 void generatepassword(char *website, char *username)
@@ -194,8 +195,9 @@ void generatepassword(char *website, char *username)
         password[i] = charset[rand() % (sizeof(charset) - 1)];
     }
     password[length] = '\0';
-    printf("Your password is %s for the username %s & website %s. Now saving it\n", password, username, website);
+    printf("Your password for the username %s and website %s is %s. I'm saving it now.\n", username, website, password);
     savepassword(website, username, password);
+    sleep(5);
 }
 
 void retrievepassword(char *website, char *username)
