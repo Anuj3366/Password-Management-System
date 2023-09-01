@@ -223,17 +223,19 @@ void generatepassword(char *website, char *username, char *password)
     char charset[] = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$^&*_+:?></'=~";
     int length = 10;
     srand(time(NULL));
-    if (idexists(website, username))
-    {
-        updating(website, username, password);
-    }
     for (int i = 0; i < length; i++)
     {
         password[i] = charset[rand() % (sizeof(charset) - 1)];
     }
     password[length] = '\0';
     printf("Your password for the username %s and website %s is %s. I'm saving it now.\n", username, website, password);
-    savepassword(website, username, password);
+    if (idexists(website, username))
+    {
+        updating(website, username, password);
+    }
+    else{
+        savepassword(website, username, password);
+    }
     sleep(5);
 }
 
