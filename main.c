@@ -8,12 +8,13 @@
 int enterwebsite(char *website);
 int enterusername(char *website, char *username, char *password);
 int enterpassword(char *website, char *username, char *password);
+void updating(char *website, char *username, char *password);
 bool passwordstrength(char *password);
 bool idexists(char *website, char *username);
 bool passwordexists(char *website, char *username, char *password);
 void savepassword(char *website, char *username, char *password);
-void generatepassword(char *website, char *username);
-void retrievepassword(char *website, char *username);
+void generatepassword(char *website, char *username,char *password);
+void retrievepassword(char *website, char *username,char *password);
 
 int enterwebsite(char *website)
 {
@@ -60,7 +61,7 @@ int enterusername(char *website, char *username, char *password)
         else
         {
             printf("\nRetrieving...\n");
-            retrievepassword(website, username);
+            retrievepassword(website, username,password);
             return 1;
         }
     }
@@ -87,35 +88,40 @@ int enterpassword(char *website, char *username, char *password)
     }
     if (idexists(website, username))
     {
-        printf("\nUpdating...\n");
-        FILE *file = fopen("passwords.xls", "r");
-        FILE *file2 = fopen("passwords2.xls", "a");
-        char line[300];
-        while (fgets(line, sizeof(line), file))
-        {
-            char website2[100];
-            char username2[100];
-            char password2[100];
-            if (sscanf(line, "%99[^||]||%99[^||]||%s", website2, username2, password2) == 3)
-            {
-                if (strcmp(website2, website) == 0 && strcmp(username2, username) == 0)
-                {
-                    fprintf(file2, "%s||%s||%s\n", website, username, password);
-                }
-                else
-                {
-                    fprintf(file2, "%s||%s||%s\n", website2, username2, password2);
-                }
-            }
-        }
-        fclose(file);
-        fclose(file2);
-        remove("passwords.xls");
-        rename("passwords2.xls", "passwords.xls");
-        printf("\nPassword Saved Successfully\n");
+        updating(website, username, password);
         return 1;
     }
     return 0;
+}
+
+void updating(char *website, char *username, char *password)
+{
+    printf("\nUpdating...\n");
+    FILE *file = fopen("passwords.xls", "r");
+    FILE *file2 = fopen("passwords2.xls", "a");
+    char line[300];
+    while (fgets(line, sizeof(line), file))
+    {
+        char website2[100];
+        char username2[100];
+        char password2[100];
+        if (sscanf(line, "%99[^||]||%99[^||]||%s", website2, username2, password2) == 3)
+        {
+            if (strcmp(website2, website) == 0 && strcmp(username2, username) == 0)
+            {
+                fprintf(file2, "%s||%s||%s\n", website, username, password);
+            }
+            else
+            {
+                fprintf(file2, "%s||%s||%s\n", website2, username2, password2);
+            }
+        }
+    }
+    fclose(file);
+    fclose(file2);
+    remove("passwords.xls");
+    rename("passwords2.xls", "passwords.xls");
+    printf("\nPassword Saved Successfully\n");
 }
 
 bool passwordstrength(char *password)
@@ -191,13 +197,16 @@ void savepassword(char *website, char *username, char *password)
     printf("\nPassword Saved Successfully\n");
 }
 
-void generatepassword(char *website, char *username)
+void generatepassword(char *website, char *username,char *password)
 {
     FILE *file = fopen("passwords.xls", "a+");
     char charset[] = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$^&*_+:?></'=~";
     int length = 10;
-    char password[length + 1];
     srand(time(NULL));
+    if(idexists(website, username))
+    {
+        updating(website, username, password);
+    }
     for (int i = 0; i < length; i++)
     {
         password[i] = charset[rand() % (sizeof(charset) - 1)];
@@ -208,7 +217,7 @@ void generatepassword(char *website, char *username)
     sleep(5);
 }
 
-void retrievepassword(char *website, char *username)
+void retrievepassword(char *website, char *username,char *password)
 {
     FILE *file = fopen("passwords.xls", "r");
     char line[300];
@@ -246,7 +255,7 @@ void retrievepassword(char *website, char *username)
     }
     if (choice == 1)
     {
-        generatepassword(website, username);
+        generatepassword(website, username,password);
         return;
     }
     printf("Exiting...\n");
@@ -309,7 +318,7 @@ int main()
             }
             printf("Enter the Username : ");
             scanf("%s", username);
-            retrievepassword(website, username);
+            retrievepassword(website, username,password);
             break;
         case 3:
             b = enterwebsite(website);
@@ -323,7 +332,7 @@ int main()
                 break;
             }
             printf("Generating Password...\n");
-            generatepassword(website, username);
+            generatepassword(website, username,password);
             break;
         default:
             printf("Invalid Choice\n");
