@@ -13,8 +13,8 @@ bool passwordstrength(char *password);
 bool idexists(char *website, char *username);
 bool passwordexists(char *website, char *username, char *password);
 void savepassword(char *website, char *username, char *password);
-void generatepassword(char *website, char *username,char *password);
-void retrievepassword(char *website, char *username,char *password);
+void generatepassword(char *website, char *username, char *password);
+void retrievepassword(char *website, char *username, char *password);
 
 int enterwebsite(char *website)
 {
@@ -61,7 +61,7 @@ int enterusername(char *website, char *username, char *password)
         else
         {
             printf("\nRetrieving...\n");
-            retrievepassword(website, username,password);
+            retrievepassword(website, username, password);
             return 1;
         }
     }
@@ -197,13 +197,13 @@ void savepassword(char *website, char *username, char *password)
     printf("\nPassword Saved Successfully\n");
 }
 
-void generatepassword(char *website, char *username,char *password)
+void generatepassword(char *website, char *username, char *password)
 {
     FILE *file = fopen("passwords.xls", "a+");
     char charset[] = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$^&*_+:?></'=~";
     int length = 10;
     srand(time(NULL));
-    if(idexists(website, username))
+    if (idexists(website, username))
     {
         updating(website, username, password);
     }
@@ -217,7 +217,7 @@ void generatepassword(char *website, char *username,char *password)
     sleep(5);
 }
 
-void retrievepassword(char *website, char *username,char *password)
+void retrievepassword(char *website, char *username, char *password)
 {
     FILE *file = fopen("passwords.xls", "r");
     char line[300];
@@ -237,25 +237,16 @@ void retrievepassword(char *website, char *username,char *password)
         }
     }
     fclose(file);
-    printf("Password not found, would you like to generate it? (1 for Yes and Any other number for No)\n");
+    printf("Password not found, would you like to generate it? (Press 1 for Yes and Anything else for No)\n");
     int choice;
     while (1)
     {
         printf("Enter your choice : ");
-        if (scanf("%d", &choice) == 1)
-        {
-            break;
-        }
-        else
-        {
-            printf("Invalid input. Please enter a valid choice.\n");
-            while (getchar() != '\n')
-                ;
-        }
+        scanf("%d", &choice) == 1;
     }
     if (choice == 1)
     {
-        generatepassword(website, username,password);
+        generatepassword(website, username, password);
         return;
     }
     printf("Exiting...\n");
@@ -265,18 +256,18 @@ int main()
 {
     system("clear");
     printf("Welcome to the Password Management System.\n\n");
-    int b; // used to break out of the loop
+    int b;
     int choice;
     while (1)
     {
         printf("\n\n");
         printf("Please select an option:\n");
-        printf("To exit from here, type `exit` or `0`. You can also type `exit` at any time to return to this menu.\n");
-        printf("1. Save a new password and save it securely.\n");
-        printf("2. View an existing stored password.\n");
-        printf("3. Generate a new strong password.\n");
+        printf("To exit, type 'exit' or '0'. You can also type 'exit' at any time to return to this menu.\n");
+        printf("1. Save a new password (Press 1).\n");
+        printf("2. View an existing stored password (Press 2).\n");
+        printf("3. Generate a new strong password (Press 3).\n");
         printf("\n\n");
-        printf("Enter your choice : ");
+        printf("Enter your choice: ");
 
         if (scanf("%d", &choice) != 1)
         {
@@ -318,7 +309,7 @@ int main()
             }
             printf("Enter the Username : ");
             scanf("%s", username);
-            retrievepassword(website, username,password);
+            retrievepassword(website, username, password);
             break;
         case 3:
             b = enterwebsite(website);
@@ -332,7 +323,7 @@ int main()
                 break;
             }
             printf("Generating Password...\n");
-            generatepassword(website, username,password);
+            generatepassword(website, username, password);
             break;
         default:
             printf("Invalid Choice\n");
