@@ -279,8 +279,8 @@ int main()
 {
     system("clear");
 
-    // int width = 100;
-    // for(int i = 0;i<(width-i)/2;i++)
+    // int width = 150;
+    // for(int i = 21;i<(width)/2;i++)
     // {
     //     printf(" ");
     // }
