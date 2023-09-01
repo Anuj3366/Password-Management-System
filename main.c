@@ -127,7 +127,7 @@ void updating(char *website, char *username, char *password)
 bool passwordstrength(char *password)
 {
     int length = strlen(password);
-    if(length < 8 || length > 10)
+    if (length < 8 || length > 10)
     {
         return false;
     }
@@ -233,7 +233,8 @@ void generatepassword(char *website, char *username, char *password)
     {
         updating(website, username, password);
     }
-    else{
+    else
+    {
         savepassword(website, username, password);
     }
     sleep(5);
@@ -277,7 +278,8 @@ void retrievepassword(char *website, char *username, char *password)
 int main()
 {
     system("clear");
-    printf("Welcome to the Password Management System.\n\n");
+    printf("Welcome to the Password Management System.\n");
+    printf("Please remember that this is a password management system, not a password manager. This means that you can only store one password per website, and it is case-sensitive.\n\n");
     int b;
     int choice;
     while (1)
