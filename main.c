@@ -278,8 +278,14 @@ void retrievepassword(char *website, char *username, char *password)
 int main()
 {
     system("clear");
-    printf("Welcome to the Password Management System.\n");
-    printf("Please remember that this is a password management system, not a password manager. This means that you can only store one password per website, and it is case-sensitive.\n\n");
+
+    // int width = 100;
+    // for(int i = 0;i<(width-i)/2;i++)
+    // {
+    //     printf(" ");
+    // }
+    printf("\033[1m%s\033[0m\n","Welcome to the Password Management System.\n");
+    printf("\033[1m%s\033[0m\n","Please remember that this is a password management system, not a password manager. This means that you can only store one password per website, and it is case-sensitive.\n\n");
     int b;
     int choice;
     while (1)
