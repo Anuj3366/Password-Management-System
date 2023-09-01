@@ -73,12 +73,11 @@ To use the Password Management System, follow these steps:
 - Enter the website's URL.
 - Enter the username.
 - The system will generate a strong password and display it.
-- Users can choose to save the generated password or not.
 
 ## Security
 
 - Passwords are stored in a file (`passwords.xls`) on your local machine.
-- Passwords are case-sensitive.
+- Passwords, URLs, and usernames are case-sensitive.
 - The system checks for password strength and ensures uniqueness.
 
 ## License
