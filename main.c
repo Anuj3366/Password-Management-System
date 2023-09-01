@@ -126,23 +126,43 @@ void updating(char *website, char *username, char *password)
 
 bool passwordstrength(char *password)
 {
-    bool isStrong = true;
     int length = strlen(password);
+    if(length < 8 || length > 10)
+    {
+        return false;
+    }
+    int a = 0;
+    int b = 0;
+    int c = 0;
+    int d = 0;
     for (int i = 0; i < length; i++)
     {
-        if ((password[i] >= '0' && password[i] <= '9') ||
-            (password[i] >= 'a' && password[i] <= 'z') ||
-            (password[i] >= 'A' && password[i] <= 'Z') ||
-            strchr("!@#$^&*_+:?></'=~", password[i]))
+        if (password[i] >= '0' && password[i] <= '9')
         {
-            isStrong = true;
+            a++;
+        }
+        else if (password[i] >= 'a' && password[i] <= 'z')
+        {
+            b++;
+        }
+        else if (password[i] >= 'A' && password[i] <= 'Z')
+        {
+            c++;
+        }
+        else if (strchr("!@#$^&*_+:?></'=~", password[i]))
+        {
+            d++;
         }
         else
         {
-            return false;
+            continue;
         }
     }
-    return isStrong;
+    if (a > 0 && b > 0 && c > 0 && d > 0)
+    {
+        return true;
+    }
+    return false;
 }
 
 bool idexists(char *website, char *username)
