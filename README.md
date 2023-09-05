@@ -27,9 +27,10 @@ To run the Password Management System, you'll need:
    ```
 
 2. Compile the program using your C compiler:
+   (You can skip this step in most cases)
 
    ```bash
-   gcc main.c -o password_manager
+   gcc main.c -o password_management_system
    ```
 
 ### Usage
@@ -39,20 +40,22 @@ To use the Password Management System, follow these steps:
 1. Run the program:
 
    ```bash
-   ./password_manager
+   ./password_management_system
    ```
 
 2. You'll be presented with a menu:
 
    ```
    Please select an option:
-   To exit, type 'exit' or '0'. You can also type 'exit' at any time to return to this menu.
+   To exit, type Anything or 0. You can also type "exit" at any time to return to this menu.
    1. Save a new password (Press 1).
    2. View an existing stored password (Press 2).
    3. Generate a new strong password (Press 3).
    ```
 
 3. Choose an option by entering the corresponding number and following the prompts.
+   
+4. Next there will be various prompts according to the choice you made or value you entered, but I warn you to first read instructions only and then continue forward.
 
 ## Features
 
