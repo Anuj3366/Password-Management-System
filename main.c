@@ -69,14 +69,14 @@ int enterusername(char *website, char *username, char *password)
 
 int enterpassword(char *website, char *username, char *password)
 {
-    printf("Enter the Password (8-10 characters with Capital letter , letters, digits, and special characters): ");
+    printf("Enter the Password (Minimum 8 to 99 characters with Capital letter ,Small letters, digits, and special characters): ");
     scanf("%s", password);
     if (strcmp(password, "exit") == 0)
     {
         printf("\nExiting...\n");
         return 1;
     }
-    while ((strlen(password) < 8 || strlen(password) > 10) || !passwordstrength(password) || passwordexists(website, username, password))
+    while (strlen(password) < 8 || !passwordstrength(password) || passwordexists(website, username, password))
     {
         printf("\nInvalid input or password already exists, please enter a valid password or write exit to exit : ");
         scanf("%s", password);
@@ -127,7 +127,7 @@ void updating(char *website, char *username, char *password)
 bool passwordstrength(char *password)
 {
     int length = strlen(password);
-    if (length < 8 || length > 10)
+    if (length < 8)
     {
         return false;
     }
@@ -149,13 +149,14 @@ bool passwordstrength(char *password)
         {
             c++;
         }
-        else if (strchr("!@#$^&*_+:?></'=~", password[i]))
+        else if (strchr("!@#$^&*()_+=-~", password[i]))
         {
             d++;
         }
         else
         {
-            continue;
+            printf("Invalid character \"%c\". Only special characters like \"!\", \"@\", \"#\", \"$\", \"^\", \"&\", \"*\", \"(\", \")\", \"_\", \"+\", \"=\", and \"-\" are allowed in the password.\n", password[i]);
+            return false;
         }
     }
     if (a > 0 && b > 0 && c > 0 && d > 0)
@@ -224,7 +225,7 @@ void generatepassword(char *website, char *username, char *password)
     char charset1[] = "0123456789";
     char charset2[] = "abcdefghijklmnopqrstuvwxyz";
     char charset3[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    char charset4[] = "!@#$^&*_+:?></'=~";
+    char charset4[] = "!@#$^&*()_+=-~";
     int length = 10;
     srand(time(NULL));
     password[0] = charset1[rand() % (sizeof(charset1) - 1)];
@@ -295,20 +296,21 @@ int main()
     // {
     //     printf(" ");
     // }
-    printf("\033[1m%s\033[0m\n", "Welcome to the Password Management System.\n");
+    
+    printf("\033[1m%s\033[0m\n\n", "Welcome to the Password Management System.\n");
     printf("\033[1m%s\033[0m\n", "Please remember that this is a password management system, not a password manager. This means that you can only store one password per website, and it is case-sensitive.\n\n");
     int b;
     int choice;
     while (1)
     {
         printf("\n\n");
-        printf("Please select an option:\n");
-        printf("To exit, type 'exit' or '0'. You can also type 'exit' at any time to return to this menu.\n");
-        printf("1. Save a new password (Press 1).\n");
-        printf("2. View an existing stored password (Press 2).\n");
-        printf("3. Generate a new strong password (Press 3).\n");
+        printf("\033[1m%s\033[0m\n", "Please select an option:\n");
+        printf("\033[1m%s\033[0m\n", "To exit, type Anything or 0. You can also type \"exit\" at any time to return to this menu.\n");
+        printf("\033[1m%s\033[0m\n", "1. Save a new password (Press 1).\n");
+        printf("\033[1m%s\033[0m\n", "2. View an existing stored password (Press 2).\n");
+        printf("\033[1m%s\033[0m\n", "3. Generate a new strong password (Press 3).\n");
         printf("\n\n");
-        printf("Enter your choice: ");
+        printf("\033[1m%s\033[0m", "Enter your choice: ");
 
         if (scanf("%d", &choice) != 1)
         {
