@@ -27,9 +27,10 @@ To run the Password Management System, you'll need:
    ```
 
 2. Compile the program using your C compiler:
+   (You can skip this step in most cases)
 
    ```bash
-   gcc main.c -o password_manager
+   gcc main.c -o password_management_system
    ```
 
 ### Usage
@@ -39,7 +40,7 @@ To use the Password Management System, follow these steps:
 1. Run the program:
 
    ```bash
-   ./password_manager
+   ./password_management_system
    ```
 
 2. You'll be presented with a menu:
