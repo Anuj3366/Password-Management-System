@@ -47,13 +47,15 @@ To use the Password Management System, follow these steps:
 
    ```
    Please select an option:
-   To exit, type 'exit' or '0'. You can also type 'exit' at any time to return to this menu.
+   To exit, type Anything or 0. You can also type "exit" at any time to return to this menu.
    1. Save a new password (Press 1).
    2. View an existing stored password (Press 2).
    3. Generate a new strong password (Press 3).
    ```
 
 3. Choose an option by entering the corresponding number and following the prompts.
+   
+4. Next there will be various prompts according to the choice you made or value you entered, but I warn you to first read instructions only and then continue forward.
 
 ## Features
 
