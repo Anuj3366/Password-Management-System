@@ -262,11 +262,8 @@ void retrievepassword(char *website, char *username, char *password)
     fclose(file);
     printf("Password not found, would you like to generate it? (Press 1 for Yes and Anything else for No)\n");
     int choice;
-    while (1)
-    {
-        printf("Enter your choice : ");
-        scanf("%d", &choice) == 1;
-    }
+    printf("Enter your choice : ");
+    scanf("%d", &choice);
     if (choice == 1)
     {
         generatepassword(website, username, password);
@@ -284,8 +281,8 @@ int main()
     // {
     //     printf(" ");
     // }
-    printf("\033[1m%s\033[0m\n","Welcome to the Password Management System.\n");
-    printf("\033[1m%s\033[0m\n","Please remember that this is a password management system, not a password manager. This means that you can only store one password per website, and it is case-sensitive.\n\n");
+    printf("\033[1m%s\033[0m\n", "Welcome to the Password Management System.\n");
+    printf("\033[1m%s\033[0m\n", "Please remember that this is a password management system, not a password manager. This means that you can only store one password per website, and it is case-sensitive.\n\n");
     int b;
     int choice;
     while (1)
