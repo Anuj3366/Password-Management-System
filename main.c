@@ -69,7 +69,7 @@ int enterusername(char *website, char *username, char *password)
 
 int enterpassword(char *website, char *username, char *password)
 {
-    printf("Enter the Password (8-10 characters with letters, digits, and special characters): ");
+    printf("Enter the Password (8-10 characters with Capital letter , letters, digits, and special characters): ");
     scanf("%s", password);
     if (strcmp(password, "exit") == 0)
     {
@@ -221,11 +221,25 @@ void generatepassword(char *website, char *username, char *password)
 {
     FILE *file = fopen("passwords.xls", "a+");
     char charset[] = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$^&*_+:?></'=~";
+    char charset1[] = "0123456789";
+    char charset2[] = "abcdefghijklmnopqrstuvwxyz";
+    char charset3[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    char charset4[] = "!@#$^&*_+:?></'=~";
     int length = 10;
     srand(time(NULL));
-    for (int i = 0; i < length; i++)
+    password[0] = charset1[rand() % (sizeof(charset1) - 1)];
+    password[1] = charset2[rand() % (sizeof(charset2) - 1)];
+    password[2] = charset3[rand() % (sizeof(charset3) - 1)];
+    password[3] = charset4[rand() % (sizeof(charset4) - 1)];
+    for (int i = 4; i < length;i++)
     {
         password[i] = charset[rand() % (sizeof(charset) - 1)];
+    }
+    for(int i = 0;i<length;i++){
+        int j = rand() % length;
+        char temp = password[i];
+        password[i] = password[j];
+        password[j] = temp;
     }
     password[length] = '\0';
     printf("Your password for the username %s and website %s is %s. I'm saving it now.\n", username, website, password);
