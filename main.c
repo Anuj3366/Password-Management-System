@@ -25,7 +25,6 @@ int enterwebsite(char *website)
         printf("\nExiting...\n");
         return 1;
     }
-    int i = 0;
     while (strlen(website) <= 6 || (strstr(website, "https://") == NULL && strstr(website, "www.") == NULL))
     {
         printf("\nThe website's URL is not valid. Please enter a valid website's URL.\n");
@@ -36,12 +35,6 @@ int enterwebsite(char *website)
             printf("\nExiting...\n");
             return 1;
         }
-        if (i == 3)
-        {
-            printf("\nYou have entered an invalid website's URL 5 times. Exiting...\n");
-            return 1;
-        }
-        i++;
     }
     return 0;
 }
@@ -239,12 +232,11 @@ void generatepassword(char *website, char *username, char *password)
     password[1] = charset2[rand() % (sizeof(charset2) - 1)];
     password[2] = charset3[rand() % (sizeof(charset3) - 1)];
     password[3] = charset4[rand() % (sizeof(charset4) - 1)];
-    for (int i = 4; i < length; i++)
+    for (int i = 4; i < length;i++)
     {
         password[i] = charset[rand() % (sizeof(charset) - 1)];
     }
-    for (int i = 0; i < length; i++)
-    {
+    for(int i = 0;i<length;i++){
         int j = rand() % length;
         char temp = password[i];
         password[i] = password[j];
@@ -297,82 +289,82 @@ void retrievepassword(char *website, char *username, char *password)
 
 int main()
 {
-    // system("clear");
-
+    system("clear");
     printf("\033[1m%s\033[0m\n\n", "Welcome to the Password Management System.\n");
     printf("\033[1m%s\033[0m\n", "Please remember that this is a password management system, not a password manager. This means that you can only store one password per website, and it is case-sensitive.\n\n");
-    int b = 0;
-    int mainchoice;
+    int b;
+    int choice;
     while (1)
     {
         printf("\n\n");
         printf("\033[1m%s\033[0m\n", "Please select an option:\n");
-        printf("\033[1m%s\033[0m\n", "To exit, type Anything and type '0' to reselect. You can also type \"exit\" at any time to return to this menu.\n");
+        printf("\033[1m%s\033[0m\n", "To exit, type Anything or 0. You can also type \"exit\" at any time to return to this menu.\n");
         printf("\033[1m%s\033[0m\n", "1. Save a new password (Press 1).\n");
         printf("\033[1m%s\033[0m\n", "2. View an existing stored password (Press 2).\n");
         printf("\033[1m%s\033[0m\n", "3. Generate a new strong password (Press 3).\n");
         printf("\n\n");
         printf("\033[1m%s\033[0m", "Enter your choice: ");
-        int i = 0;
-        while (mainchoice == 0)
+
+        if (scanf("%d", &choice) != 1)
         {
-            scanf("%d", &mainchoice);
-            i++;
-            if (i == 5)
-            {
-                printf("\nYou have entered an invalid choice 5 times. Exiting...\n");
-                return 0;
-            }
+            printf("Exiting...\n");
+            return 0;
         }
         printf("\n");
         char website[100];
         char username[100];
         char password[100];
-        if (mainchoice == 1)
+        switch (choice)
         {
-            b = enterwebsite(website);
-            if (b != 1)
-            {
-                b = enterusername(website, username, password);
-            }
-            if (b != 1)
-            {
-                b = enterpassword(website, username, password);
-            }
-            if (b != 1)
-            {
-                savepassword(website, username, password);
-            }
-        }
-        else if (mainchoice == 2)
-        {
-            b = enterwebsite(website);
-            if (b != 1)
-            {
-                printf("Enter the Username : ");
-                scanf("%s", username);
-                retrievepassword(website, username, password);
-            }
-        }
-        else if (mainchoice == 3)
-        {
-            b = enterwebsite(website);
-            if (b != 1)
-            {
-                b = enterusername(website, username, password);
-            }
-            if (b != 1)
-            {
-                printf("Generating Password...\n");
-                generatepassword(website, username, password);
-            }
-        }
-        else
-        {
+        case 0:
             printf("\nExiting...\n");
             return 0;
+        case 1:
+            b = enterwebsite(website);
+            if (b == 1)
+            {
+                break;
+            }
+            b = enterusername(website, username, password);
+            if (b == 1)
+            {
+                break;
+            }
+            b = enterpassword(website, username, password);
+            if (b == 1)
+            {
+                break;
+            }
+            savepassword(website, username, password);
+            break;
+        case 2:
+            b = enterwebsite(website);
+            if (b == 1)
+            {
+                break;
+            }
+            printf("Enter the Username : ");
+            scanf("%s", username);
+            retrievepassword(website, username, password);
+            break;
+        case 3:
+            b = enterwebsite(website);
+            if (b == 1)
+            {
+                break;
+            }
+            b = enterusername(website, username, password);
+            if (b == 1)
+            {
+                break;
+            }
+            printf("Generating Password...\n");
+            generatepassword(website, username, password);
+            break;
+        default:
+            printf("Invalid Choice\n");
+            break;
         }
-        mainchoice = 0;
         sleep(5);
         system("clear");
     }
