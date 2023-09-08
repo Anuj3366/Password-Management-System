@@ -251,7 +251,7 @@ void generatepassword(char *website, char *username, char *password)
         password[j] = temp;
     }
     password[length] = '\0';
-    printf("Your password for the username %s and website %s is %s. I'm saving it now.\n", username, website, password);
+    printf("Your password for the username %s and website %s is %s. Saving it now.\n", username, website, password);
     if (idexists(website, username))
     {
         updating(website, username, password);
@@ -266,7 +266,7 @@ void generatepassword(char *website, char *username, char *password)
 void retrievepassword(char *website, char *username, char *password)
 {
     FILE *file = fopen("passwords.xls", "r");
-    char line[300];
+    char line[306];
     while (fgets(line, sizeof(line), file))
     {
         char website2[100];
@@ -370,7 +370,8 @@ int main()
             generatepassword(website, username, password);
             break;
         default:
-            printf("Invalid Choice\n");
+            printf("Exiting...\n");
+            exit(0);
             break;
         }
         sleep(5);
