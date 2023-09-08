@@ -232,11 +232,12 @@ void generatepassword(char *website, char *username, char *password)
     password[1] = charset2[rand() % (sizeof(charset2) - 1)];
     password[2] = charset3[rand() % (sizeof(charset3) - 1)];
     password[3] = charset4[rand() % (sizeof(charset4) - 1)];
-    for (int i = 4; i < length;i++)
+    for (int i = 4; i < length; i++)
     {
         password[i] = charset[rand() % (sizeof(charset) - 1)];
     }
-    for(int i = 0;i<length;i++){
+    for (int i = 0; i < length; i++)
+    {
         int j = rand() % length;
         char temp = password[i];
         password[i] = password[j];
@@ -296,7 +297,7 @@ int main()
     // {
     //     printf(" ");
     // }
-    
+
     printf("\033[1m%s\033[0m\n\n", "Welcome to the Password Management System.\n");
     printf("\033[1m%s\033[0m\n", "Please remember that this is a password management system, not a password manager. This means that you can only store one password per website, and it is case-sensitive.\n\n");
     int b;
