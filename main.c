@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
 #include <stdbool.h>
+#include <time.h>
 #include <unistd.h>
 
 int enterwebsite(char *website);
@@ -25,6 +25,7 @@ int enterwebsite(char *website)
         printf("\nExiting...\n");
         return 1;
     }
+    int i = 1;
     while (strlen(website) <= 6 || (strstr(website, "https://") == NULL && strstr(website, "www.") == NULL))
     {
         printf("\nThe website's URL is not valid. Please enter a valid website's URL.\n");
@@ -32,6 +33,13 @@ int enterwebsite(char *website)
         scanf("%s", website);
         if (strcmp(website, "exit") == 0)
         {
+            printf("\nExiting...\n");
+            return 1;
+        }
+        i++;
+        if (i == 5)
+        {
+            printf("\nYou have entered an invalid website's URL 5 times. Please try again later.\n");
             printf("\nExiting...\n");
             return 1;
         }
@@ -50,7 +58,7 @@ int enterusername(char *website, char *username, char *password)
     }
     if (idexists(website, username))
     {
-        printf("\nThe username already exists. Would you like to Update it (press `1`) or retrieve it (press anything else)?\n");
+        printf("\nThe username already exists. Would you like to Update it (press `1`) or retrieve it (Any other Number) or to retrieve and exit (any letters)?\n");
         printf("Enter your choice : ");
         int choice;
         scanf("%d", &choice);
@@ -155,7 +163,7 @@ bool passwordstrength(char *password)
         }
         else
         {
-            printf("Invalid character \"%c\". Only special characters like \"!\", \"@\", \"#\", \"$\", \"^\", \"&\", \"*\", \"(\", \")\", \"_\", \"+\", \"=\", and \"-\" are allowed in the password.\n", password[i]);
+            printf("Invalid character %c. Only special characters like \"!\", \"@\", \"#\", \"$\", \"^\", \"&\", \"*\", \"(\", \")\", \"_\", \"+\", \"=\", and \"-\" are allowed in the password.\n", password[i]);
             return false;
         }
     }
@@ -169,7 +177,7 @@ bool passwordstrength(char *password)
 bool idexists(char *website, char *username)
 {
     FILE *file = fopen("passwords.xls", "r");
-    char line[300];
+    char line[306];
     while (fgets(line, sizeof(line), file))
     {
         char website2[100];
@@ -191,7 +199,7 @@ bool idexists(char *website, char *username)
 bool passwordexists(char *website, char *username, char *password)
 {
     FILE *file = fopen("passwords.xls", "r");
-    char line[300];
+    char line[306];
     while (fgets(line, sizeof(line), file))
     {
         char website2[100];
