@@ -292,12 +292,6 @@ int main()
 {
     system("clear");
 
-    // int width = 150;
-    // for(int i = 21;i<(width)/2;i++)
-    // {
-    //     printf(" ");
-    // }
-
     printf("\033[1m%s\033[0m\n\n", "Welcome to the Password Management System.\n");
     printf("\033[1m%s\033[0m\n", "Please remember that this is a password management system, not a password manager. This means that you can only store one password per website, and it is case-sensitive.\n\n");
     int b;
