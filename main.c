@@ -325,14 +325,12 @@ int make_key(char *password){
 }
 
 void encrypt(char *third){
-    int key1 = make_key(key);
     for(int i = 0;i<strlen(third); i++){
         third[i] = third[i] + key;
     }
 }
 
 void decrypt(char *third){
-    int key1 = make_key(key);
     for(int i = 0;i<strlen(third); i++){
         third[i] = third[i] - key;
     }
