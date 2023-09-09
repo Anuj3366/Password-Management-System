@@ -5,7 +5,7 @@
 #include <time.h>
 #include <unistd.h>
 
-int key;
+int key = 1;
 
 int make_key(char *password);
 int enter_website(char *website);
@@ -50,6 +50,8 @@ void user_save(char *filename, char *first, char *second)
     FILE *file = fopen(filename, "a+");
     fprintf(file, "%s||%s||\n", first, second);
     fclose(file);
+    printf("\nUser Saved Successfully\n");
+    sleep(2);
 }
 
 int enter_website(char *website)
@@ -321,7 +323,6 @@ int make_key(char *password) {
     for (int i = 0; i < strlen(password); i++) {
         making_key += password[i];
     }
-    key = making_key;
     return key;
 }
 
@@ -343,6 +344,7 @@ void password_save(char *filename, char *first, char *second, char *third)
     encrypt(third);
     fprintf(file, "%s||%s||%s\n", first, second, third);
     fclose(file);
+    printf("\nPassword Saved Successfully\n");
 }
 
 void generate_password(char *filename, char *website, char *username, char *password)
@@ -534,7 +536,7 @@ int main()
     }
 
     // makeing key
-    make_key(system_password);
+    key = make_key(system_password);
 
     // naming the file for the user to store passwords
     char file[100];
@@ -555,7 +557,7 @@ int main()
         printf("\033[1m%s\033[0m\n\n", "1. Save a new password (Press 1).");
         printf("\033[1m%s\033[0m\n\n", "2. View an existing stored password (Press 2).");
         printf("\033[1m%s\033[0m\n", "3. Generate a new strong password (Press 3).");
-        printf("\n\n\n\033[1m%s\033[0m", "Enter your choice: ");
+        printf("\n\n\n\033[1m%s\033[0m", "Enter your choice (1, 2, 3) : ");
 
         if (scanf("%d", &choice) != 1)
         {
