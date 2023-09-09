@@ -27,7 +27,6 @@ int systemusername(char *system_username)
     scanf("%s", system_username);
     while (getchar() != '\n')
         ; // Consume characters until a newline is encountered
-    fprintf(file, "%s", system_username);
     fclose(file);
     return 0;
 }
@@ -408,11 +407,6 @@ int main()
         attempts++;
         if (scanf("%d", &choice) != 1 || (choice != 1 && choice != 2))
         {
-            if (strcmp("exit", &choice) == 0)
-            {
-                printf("\nExiting...\n");
-                return 0;
-            }
 
             while (getchar() != '\n')
                 ; // Consume characters until a newline is encountered
@@ -523,7 +517,7 @@ int main()
     {
         system("clear");
         printf("\n\n\033[1m%s\033[0m\n\n", "Please select an option:");
-        printf("\033[1m%s\033[0m\n\n", "To exit, type 0 or 'exit' at any time to return to this menu.");
+        printf("\033[1m%s\033[0m\n\n", "To exit , type 'exit' at any time to return to this menu.");
         printf("\033[1m%s\033[0m\n\n", "1. Save a new password (Press 1).");
         printf("\033[1m%s\033[0m\n\n", "2. View an existing stored password (Press 2).");
         printf("\033[1m%s\033[0m\n", "3. Generate a new strong password (Press 3).");
