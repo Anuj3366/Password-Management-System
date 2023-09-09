@@ -5,11 +5,11 @@
 #include <time.h>
 #include <unistd.h>
 
-int enterwebsite(char *website);
+int enter_website(char *website);
 int systemusername(char *system_username);
 int systempassword(char *system_password);
-int enterusername(char *filename, char *website, char *username, char *password);
-int enterpassword(char *filename, char *website, char *username, char *password);
+int enter_username(char *filename, char *website, char *username, char *password);
+int enter_password(char *filename, char *website, char *username, char *password);
 bool passwordstrength(char *password);
 bool username_check(char *filename, char *first);
 bool password_check(char *filename, char *third);
@@ -17,8 +17,8 @@ bool id_check(char *filename, char *first, char *second);
 void user_save(char *filename, char *first, char *second);
 void password_save(char *filename, char *first, char *second, char *third);
 void updating(char *filename, char *website, char *username, char *password);
-void generatepassword(char *filename, char *website, char *username, char *password);
-void retrievepassword(char *filename, char *website, char *username, char *password);
+void generate_password(char *filename, char *website, char *username, char *password);
+void retrieve_password(char *filename, char *website, char *username, char *password);
 
 int systemusername(char *system_username)
 {
@@ -44,7 +44,7 @@ void user_save(char *filename, char *first, char *second)
     fclose(file);
 }
 
-int enterwebsite(char *website)
+int enter_website(char *website)
 {
     printf("Enter the website's URL: ");
     scanf("%s", website);
@@ -75,8 +75,7 @@ int enterwebsite(char *website)
     return 0;
 }
 
-
-int enterusername(char *filename, char *website, char *username, char *password)
+int enter_username(char *filename, char *website, char *username, char *password)
 {
     printf("Enter the Username : ");
     scanf("%s", username);
@@ -98,13 +97,13 @@ int enterusername(char *filename, char *website, char *username, char *password)
         else
         {
             printf("\nRetrieving...\n");
-            retrievepassword(filename, website, username, password);
+            retrieve_password(filename, website, username, password);
             return 1;
         }
     }
 }
 
-int enterpassword(char *filename, char *website, char *username, char *password)
+int enter_password(char *filename, char *website, char *username, char *password)
 {
     printf("Enter the Password (Minimum 8 to 99 characters with Capital letter ,Small letters, digits, and special characters): ");
     scanf("%s", password);
@@ -302,7 +301,7 @@ void password_save(char *filename, char *first, char *second, char *third)
     fclose(file);
 }
 
-void generatepassword(char *filename, char *website, char *username, char *password)
+void generate_password(char *filename, char *website, char *username, char *password)
 {
     FILE *file = fopen(filename, "a+");
     char charset[] = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$^&*_+:?></'=~";
@@ -340,7 +339,7 @@ void generatepassword(char *filename, char *website, char *username, char *passw
     sleep(5);
 }
 
-void retrievepassword(char *filename, char *website, char *username, char *password)
+void retrieve_password(char *filename, char *website, char *username, char *password)
 {
     FILE *file = fopen(filename, "r");
     char line[306];
@@ -366,7 +365,7 @@ void retrievepassword(char *filename, char *website, char *username, char *passw
     scanf("%d", &choice);
     if (choice == 1)
     {
-        generatepassword(filename, website, username, password);
+        generate_password(filename, website, username, password);
         return;
     }
     printf("Exiting...\n");
@@ -403,8 +402,8 @@ int main()
         }
     }
 
-    char system_username[100];// = "user";
-    char system_password[100];// = "1234";
+    char system_username[100]; // = "user";
+    char system_password[100]; // = "1234";
 
     char filename[100] = "user.txt";
 
@@ -483,88 +482,99 @@ int main()
             }
         }
     }
-    
-    //naming the file for the user to store passwords
+
+    // naming the file for the user to store passwords
     char file[100];
     strcpy(file, system_username);
     strcat(file, "_passwords.txt");
 
-    //creating a file if it doesn't exist
+    // creating a file if it doesn't exist
     FILE *file2 = fopen(file, "a+");
     fclose(file2);
 
-    int b;// creating to check if the user wants to exit
-    
+    int operationResult; // creating a variable to store the result of the operation
+
     while (1)
     {
         system("clear");
         printf("\n\n\033[1m%s\033[0m\n\n", "Please select an option:");
-        printf("\033[1m%s\033[0m\n\n", "To exit, type Anything or 0. You can also type \"exit\" at any time to return to this menu.");
+        printf("\033[1m%s\033[0m\n\n", "To exit, type 0 or 'exit' at any time to return to this menu.");
         printf("\033[1m%s\033[0m\n\n", "1. Save a new password (Press 1).");
         printf("\033[1m%s\033[0m\n\n", "2. View an existing stored password (Press 2).");
         printf("\033[1m%s\033[0m\n", "3. Generate a new strong password (Press 3).");
         printf("\n\n\n\033[1m%s\033[0m", "Enter your choice: ");
+
         if (scanf("%d", &choice) != 1)
         {
+            // Exiting on invalid input
             printf("Exiting...\n");
             return 0;
         }
+
         printf("\n");
+
         char website[100];
         char username[100];
         char password[100];
+
         switch (choice)
         {
         case 0:
+            // Exiting gracefully
             printf("\nExiting...\n");
             return 0;
         case 1:
-            b = enterwebsite(website);
-            if (b == 1)
+            // Saving a new password
+            operationResult = enter_website(website);
+            if (operationResult == 1)
             {
                 break;
             }
-            b = enterusername(file, website, username, password);
-            if (b == 1)
+            operationResult = enter_username(file,website, username, password);
+            if (operationResult == 1)
             {
                 break;
             }
-            b = enterpassword(file, website, username, password);
-            if (b == 1)
+            operationResult = enter_password(file,website, username, password);
+            if (operationResult == 1)
             {
                 break;
             }
-            password_save(file, website, username, password);
+            password_save(file,website, username, password);
             break;
         case 2:
-            b = enterwebsite(website);
-            if (b == 1)
+            // Viewing an existing password
+            operationResult = enter_website(website);
+            if (operationResult == 1)
             {
                 break;
             }
             printf("Enter the Username : ");
             scanf("%s", username);
-            retrievepassword(file, website, username, password);
+            retrieve_password(file,website, username, password);
             break;
         case 3:
-            b = enterwebsite(website);
-            if (b == 1)
+            // Generating a new strong password
+            operationResult = enter_website(website);
+            if (operationResult == 1)
             {
                 break;
             }
-            b = enterusername(file, website, username, password);
-            if (b == 1)
+            operationResult = enter_username(file,website, username, password);
+            if (operationResult == 1)
             {
                 break;
             }
             printf("Generating Password...\n");
-            generatepassword(file, website, username, password);
+            generate_password(file,website, username, password);
             break;
         default:
+            // Exiting on an unknown choice
             printf("Exiting...\n");
-            exit(0);
-            break;
+            return 0;
         }
+
+        // Sleep for 5 seconds before clearing the screen and presenting the menu again
         sleep(5);
     }
     return 0;
