@@ -6,15 +6,43 @@
 #include <unistd.h>
 
 int enterwebsite(char *website);
-int enterusername(char *website, char *username, char *password);
-int enterpassword(char *website, char *username, char *password);
-void updating(char *website, char *username, char *password);
+int systemusername(char *system_username);
+int systempassword(char *system_password);
+int enterusername(char *filename, char *website, char *username, char *password);
+int enterpassword(char *filename, char *website, char *username, char *password);
 bool passwordstrength(char *password);
-bool idexists(char *website, char *username);
-bool passwordexists(char *website, char *username, char *password);
-void savepassword(char *website, char *username, char *password);
-void generatepassword(char *website, char *username, char *password);
-void retrievepassword(char *website, char *username, char *password);
+bool username_check(char *filename, char *first);
+bool password_check(char *filename, char *third);
+bool id_check(char *filename, char *first, char *second);
+void user_save(char *filename, char *first, char *second);
+void password_save(char *filename, char *first, char *second, char *third);
+void updating(char *filename, char *website, char *username, char *password);
+void generatepassword(char *filename, char *website, char *username, char *password);
+void retrievepassword(char *filename, char *website, char *username, char *password);
+
+int systemusername(char *system_username)
+{
+    FILE *file = fopen("user.txt", "a+");
+    printf("Please enter your system's username: ");
+    scanf("%s", system_username);
+    fprintf(file, "%s", system_username);
+    fclose(file);
+    return 0;
+}
+
+int systempassword(char *system_password)
+{
+    printf("Please enter your system password. It should only consist of numbers and should not be shared as it is used to encrypt and decrypt your passwords: ");
+    scanf("%s", system_password);
+    return 0;
+}
+
+void user_save(char *filename, char *first, char *second)
+{
+    FILE *file = fopen(filename, "a+");
+    fprintf(file, "%s||%s\n", first, second);
+    fclose(file);
+}
 
 int enterwebsite(char *website)
 {
@@ -47,7 +75,8 @@ int enterwebsite(char *website)
     return 0;
 }
 
-int enterusername(char *website, char *username, char *password)
+
+int enterusername(char *filename, char *website, char *username, char *password)
 {
     printf("Enter the Username : ");
     scanf("%s", username);
@@ -56,7 +85,7 @@ int enterusername(char *website, char *username, char *password)
         printf("\nExiting...\n");
         return 1;
     }
-    if (idexists(website, username))
+    if (id_check(filename, website, username))
     {
         printf("\nThe username already exists. Would you like to Update it (press `1`) or retrieve it (Any other Number) or to retrieve and exit (any letters)?\n");
         printf("Enter your choice : ");
@@ -69,13 +98,13 @@ int enterusername(char *website, char *username, char *password)
         else
         {
             printf("\nRetrieving...\n");
-            retrievepassword(website, username, password);
+            retrievepassword(filename, website, username, password);
             return 1;
         }
     }
 }
 
-int enterpassword(char *website, char *username, char *password)
+int enterpassword(char *filename, char *website, char *username, char *password)
 {
     printf("Enter the Password (Minimum 8 to 99 characters with Capital letter ,Small letters, digits, and special characters): ");
     scanf("%s", password);
@@ -84,7 +113,7 @@ int enterpassword(char *website, char *username, char *password)
         printf("\nExiting...\n");
         return 1;
     }
-    while (strlen(password) < 8 || !passwordstrength(password) || passwordexists(website, username, password))
+    while (strlen(password) < 8 || !passwordstrength(password) || password_check(filename, password))
     {
         printf("\nInvalid input or password already exists, please enter a valid password or write exit to exit : ");
         scanf("%s", password);
@@ -94,19 +123,19 @@ int enterpassword(char *website, char *username, char *password)
             return 1;
         }
     }
-    if (idexists(website, username))
+    if (id_check(filename, website, username))
     {
-        updating(website, username, password);
+        updating(filename, website, username, password);
         return 1;
     }
     return 0;
 }
 
-void updating(char *website, char *username, char *password)
+void updating(char *filename, char *website, char *username, char *password)
 {
     printf("\nUpdating...\n");
-    FILE *file = fopen("passwords.xls", "r");
-    FILE *file2 = fopen("passwords2.xls", "a");
+    FILE *file = fopen(filename, "r");
+    FILE *file2 = fopen("passwords2.txt", "a");
     char line[300];
     while (fgets(line, sizeof(line), file))
     {
@@ -127,8 +156,8 @@ void updating(char *website, char *username, char *password)
     }
     fclose(file);
     fclose(file2);
-    remove("passwords.xls");
-    rename("passwords2.xls", "passwords.xls");
+    remove(filename);
+    rename("passwords2.txt", filename);
     printf("\nPassword Saved Successfully\n");
 }
 
@@ -174,18 +203,27 @@ bool passwordstrength(char *password)
     return false;
 }
 
-bool idexists(char *website, char *username)
+bool username_check(char *filename, char *first)
 {
-    FILE *file = fopen("passwords.xls", "r");
+    FILE *file = fopen(filename, "r");
     char line[306];
     while (fgets(line, sizeof(line), file))
     {
-        char website2[100];
-        char username2[100];
-        char password2[100];
-        if (sscanf(line, "%99[^||]||%99[^||]||%s", website2, username2, password2) == 3)
+        char first_check[100];
+        char second_check[100];
+        char third_check[100];
+
+        if (sscanf(line, "%99[^||]||%99[^||]||%99s", first_check, second_check, third_check) == 3)
         {
-            if (strcmp(website2, website) == 0 && strcmp(username2, username) == 0)
+            if (strcmp(first_check, first) == 0)
+            {
+                fclose(file);
+                return true;
+            }
+        }
+        else if (sscanf(line, "%99[^||]||%99[^||]", first_check, second_check) == 2)
+        {
+            if (strcmp(first_check, first) == 0)
             {
                 fclose(file);
                 return true;
@@ -196,18 +234,27 @@ bool idexists(char *website, char *username)
     return false;
 }
 
-bool passwordexists(char *website, char *username, char *password)
+bool id_check(char *filename, char *first, char *second)
 {
-    FILE *file = fopen("passwords.xls", "r");
+    FILE *file = fopen(filename, "r");
     char line[306];
     while (fgets(line, sizeof(line), file))
     {
-        char website2[100];
-        char username2[100];
-        char password2[100];
-        if (sscanf(line, "%99[^||]||%99[^||]||%s", website2, username2, password2) == 3)
+        char first_check[100];
+        char second_check[100];
+        char third_check[100];
+
+        if (sscanf(line, "%99[^||]||%99[^||]||%99s", first_check, second_check, third_check) == 3)
         {
-            if (strcmp(password2, password) == 0)
+            if (strcmp(first_check, first) == 0 && strcmp(second_check, second) == 0)
+            {
+                fclose(file);
+                return true;
+            }
+        }
+        else if (sscanf(line, "%99[^||]||%99[^||]", first_check, second_check) == 2)
+        {
+            if (strcmp(first_check, first) == 0 && strcmp(second_check, second) == 0)
             {
                 fclose(file);
                 return true;
@@ -218,17 +265,46 @@ bool passwordexists(char *website, char *username, char *password)
     return false;
 }
 
-void savepassword(char *website, char *username, char *password)
+bool password_check(char *filename, char *third)
 {
-    FILE *file = fopen("passwords.xls", "a+");
-    fprintf(file, "%s||%s||%s\n", website, username, password);
+    FILE *file = fopen(filename, "r");
+    char line[306];
+    while (fgets(line, sizeof(line), file))
+    {
+        char first_check[100];
+        char second_check[100];
+        char third_check[100];
+        if (sscanf(line, "%99[^||]||%99[^||]||%s", first_check, second_check, third_check) == 3)
+        {
+            if (strcmp(third_check, third) == 0)
+            {
+                fclose(file);
+                return true;
+            }
+        }
+        else if (sscanf(line, "%99[^||]||%99[^||]", first_check, second_check) == 2)
+        {
+            if (strcmp(second_check, third) == 0)
+            {
+                fclose(file);
+                return true;
+            }
+        }
+    }
     fclose(file);
-    printf("\nPassword Saved Successfully\n");
+    return false;
 }
 
-void generatepassword(char *website, char *username, char *password)
+void password_save(char *filename, char *first, char *second, char *third)
 {
-    FILE *file = fopen("passwords.xls", "a+");
+    FILE *file = fopen(filename, "a+");
+    fprintf(file, "%s||%s||%s\n", first, second, third);
+    fclose(file);
+}
+
+void generatepassword(char *filename, char *website, char *username, char *password)
+{
+    FILE *file = fopen(filename, "a+");
     char charset[] = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$^&*_+:?></'=~";
     char charset1[] = "0123456789";
     char charset2[] = "abcdefghijklmnopqrstuvwxyz";
@@ -240,11 +316,12 @@ void generatepassword(char *website, char *username, char *password)
     password[1] = charset2[rand() % (sizeof(charset2) - 1)];
     password[2] = charset3[rand() % (sizeof(charset3) - 1)];
     password[3] = charset4[rand() % (sizeof(charset4) - 1)];
-    for (int i = 4; i < length;i++)
+    for (int i = 4; i < length; i++)
     {
         password[i] = charset[rand() % (sizeof(charset) - 1)];
     }
-    for(int i = 0;i<length;i++){
+    for (int i = 0; i < length; i++)
+    {
         int j = rand() % length;
         char temp = password[i];
         password[i] = password[j];
@@ -252,20 +329,20 @@ void generatepassword(char *website, char *username, char *password)
     }
     password[length] = '\0';
     printf("Your password for the username %s and website %s is %s. Saving it now.\n", username, website, password);
-    if (idexists(website, username))
+    if (id_check(filename, website, username))
     {
-        updating(website, username, password);
+        updating(filename, website, username, password);
     }
     else
     {
-        savepassword(website, username, password);
+        password_save(filename, website, username, password);
     }
     sleep(5);
 }
 
-void retrievepassword(char *website, char *username, char *password)
+void retrievepassword(char *filename, char *website, char *username, char *password)
 {
-    FILE *file = fopen("passwords.xls", "r");
+    FILE *file = fopen(filename, "r");
     char line[306];
     while (fgets(line, sizeof(line), file))
     {
@@ -289,7 +366,7 @@ void retrievepassword(char *website, char *username, char *password)
     scanf("%d", &choice);
     if (choice == 1)
     {
-        generatepassword(website, username, password);
+        generatepassword(filename, website, username, password);
         return;
     }
     printf("Exiting...\n");
@@ -298,21 +375,135 @@ void retrievepassword(char *website, char *username, char *password)
 int main()
 {
     system("clear");
-    printf("\033[1m%s\033[0m\n\n", "Welcome to the Password Management System.\n");
-    printf("\033[1m%s\033[0m\n", "Please remember that this is a password management system, not a password manager. This means that you can only store one password per website, and it is case-sensitive.\n\n");
-    int b;
+    printf("\033[1mWelcome to the Password Management System.\033[0m\n\n");
+    printf("\033[1mPlease note that this program is not secure. It is intended for demonstration purposes only.\033[0m\n\n\n");
+
+    printf("\033[1mWould you like to:\033[0m\n");
+    printf("1. Create a new account\n");
+    printf("2. Log in to an existing account\n\n");
+    printf("\033[1mEnter your choice (1 or 2): \033[0m");
+
     int choice;
+    int attempts = 0;
     while (1)
     {
-        printf("\n\n");
-        printf("\033[1m%s\033[0m\n", "Please select an option:\n");
-        printf("\033[1m%s\033[0m\n", "To exit, type Anything or 0. You can also type \"exit\" at any time to return to this menu.\n");
-        printf("\033[1m%s\033[0m\n", "1. Save a new password (Press 1).\n");
-        printf("\033[1m%s\033[0m\n", "2. View an existing stored password (Press 2).\n");
-        printf("\033[1m%s\033[0m\n", "3. Generate a new strong password (Press 3).\n");
-        printf("\n\n");
-        printf("\033[1m%s\033[0m", "Enter your choice: ");
+        if (scanf("%d", &choice) != 1 || (choice != 1 && choice != 2))
+        {
+            printf("\033[1mInvalid input. Please enter a valid choice (1 or 2):\033[0m\n");
+            attempts++;
+            if (attempts == 5)
+            {
+                printf("You've entered an invalid input 5 times. It seems you might be having difficulty. Please try again later.\n");
+                return 0;
+            }
+        }
+        else
+        {
+            break;
+        }
+    }
 
+    char system_username[100];// = "user";
+    char system_password[100];// = "1234";
+
+    char filename[100] = "user.txt";
+
+    if (choice == 1)
+    {
+        systemusername(system_username);
+        attempts = 1;
+        while (username_check(filename, system_username))
+        {
+            printf("Username already exists.\n");
+            printf("Enter a different username: ");
+            scanf("%s", system_username);
+            attempts++;
+            if (attempts == 5)
+            {
+                printf("You've entered an invalid input 5 times. It seems you might be having difficulty. Please try again later.\n");
+                return 0;
+            }
+        }
+        systempassword(system_password);
+        attempts = 1;
+        while (1)
+        {
+            for (int i = 0; i < strlen(system_password); i++)
+            {
+                if (system_password[i] < '0' || system_password[i] > '9' || strlen(system_password) < 4)
+                {
+                    printf("Invalid input. Please enter a valid password: ");
+                    scanf("%s", system_password);
+                    attempts++;
+                    if (attempts == 5)
+                    {
+                        printf("You've entered an invalid input 5 times. It seems you might be having difficulty. Please try again later.\n");
+                        exit(0);
+                    }
+                    break;
+                }
+            }
+        }
+        user_save(filename, system_username, system_password);
+    }
+    else
+    {
+        systemusername(system_username);
+        attempts = 1;
+        while (!username_check(filename, system_username))
+        {
+            printf("Username does not exist.\n");
+            printf("Enter a different username: ");
+            scanf("%s", system_username);
+            attempts++;
+            if (attempts == 5)
+            {
+                printf("You've entered an invalid input 5 times. It seems you might be having difficulty. Please try again later.\n");
+                return 0;
+            }
+        }
+        systempassword(system_password);
+        attempts = 1;
+        while (1)
+        {
+            for (int i = 0; i < strlen(system_password); i++)
+            {
+                if (system_password[i] < '0' || system_password[i] > '9' || strlen(system_password) < 4)
+                {
+                    printf("Invalid input. Please enter a valid password: ");
+                    scanf("%s", system_password);
+                    attempts++;
+                    if (attempts == 5)
+                    {
+                        printf("You've entered an invalid input 5 times. It seems you might be having difficulty. Please try again later.\n");
+                        exit(0);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    
+    //naming the file for the user to store passwords
+    char file[100];
+    strcpy(file, system_username);
+    strcat(file, "_passwords.txt");
+
+    //creating a file if it doesn't exist
+    FILE *file2 = fopen(file, "a+");
+    fclose(file2);
+
+    int b;// creating to check if the user wants to exit
+    
+    while (1)
+    {
+        system("clear");
+        printf("\n\n\033[1m%s\033[0m\n\n", "Please select an option:");
+        printf("\033[1m%s\033[0m\n\n", "To exit, type Anything or 0. You can also type \"exit\" at any time to return to this menu.");
+        printf("\033[1m%s\033[0m\n\n", "1. Save a new password (Press 1).");
+        printf("\033[1m%s\033[0m\n\n", "2. View an existing stored password (Press 2).");
+        printf("\033[1m%s\033[0m\n", "3. Generate a new strong password (Press 3).");
+        printf("\n\n\n\033[1m%s\033[0m", "Enter your choice: ");
         if (scanf("%d", &choice) != 1)
         {
             printf("Exiting...\n");
@@ -333,17 +524,17 @@ int main()
             {
                 break;
             }
-            b = enterusername(website, username, password);
+            b = enterusername(file, website, username, password);
             if (b == 1)
             {
                 break;
             }
-            b = enterpassword(website, username, password);
+            b = enterpassword(file, website, username, password);
             if (b == 1)
             {
                 break;
             }
-            savepassword(website, username, password);
+            password_save(file, website, username, password);
             break;
         case 2:
             b = enterwebsite(website);
@@ -353,7 +544,7 @@ int main()
             }
             printf("Enter the Username : ");
             scanf("%s", username);
-            retrievepassword(website, username, password);
+            retrievepassword(file, website, username, password);
             break;
         case 3:
             b = enterwebsite(website);
@@ -361,13 +552,13 @@ int main()
             {
                 break;
             }
-            b = enterusername(website, username, password);
+            b = enterusername(file, website, username, password);
             if (b == 1)
             {
                 break;
             }
             printf("Generating Password...\n");
-            generatepassword(website, username, password);
+            generatepassword(file, website, username, password);
             break;
         default:
             printf("Exiting...\n");
@@ -375,7 +566,6 @@ int main()
             break;
         }
         sleep(5);
-        system("clear");
     }
     return 0;
 }
