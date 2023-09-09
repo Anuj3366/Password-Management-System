@@ -5,6 +5,9 @@
 #include <time.h>
 #include <unistd.h>
 
+int key;
+
+int make_key(char *password);
 int enter_website(char *website);
 int systemusername(char *system_username);
 int systempassword(char *system_password);
@@ -14,6 +17,8 @@ bool passwordstrength(char *password);
 bool username_check(char *filename, char *first);
 bool password_check(char *filename, char *third);
 bool id_check(char *filename, char *first, char *second);
+void encrypt(char *third);
+void decrypt(char *third);
 void user_save(char *filename, char *first, char *second);
 void password_save(char *filename, char *first, char *second, char *third);
 void updating(char *filename, char *website, char *username, char *password);
@@ -160,6 +165,7 @@ void updating(char *filename, char *website, char *username, char *password)
         {
             if (strcmp(website2, website) == 0 && strcmp(username2, username) == 0)
             {
+                encrypt(password);
                 fprintf(file2, "%s||%s||%s\n", website, username, password);
             }
             else
@@ -209,10 +215,10 @@ bool passwordstrength(char *password)
             printf("Invalid character %c. Only special characters like \"!\", \"@\", \"#\", \"$\", \"^\", \"&\", \"*\", \"(\", \")\", \"_\", \"+\", \"=\", and \"-\" are allowed in the password.\n", password[i]);
             return false;
         }
-    }
-    if (a > 0 && b > 0 && c > 0 && d > 0)
-    {
-        return true;
+        if (a > 0 && b > 0 && c > 0 && d > 0)
+        {
+            return true;
+        }
     }
     return false;
 }
@@ -289,7 +295,8 @@ bool password_check(char *filename, char *third)
         char second_check[100];
         char third_check[100];
         if (sscanf(line, "%99[^||]||%99[^||]||%s", first_check, second_check, third_check) == 3)
-        {
+        {   
+            decrypt(third_check);
             if (strcmp(third_check, third) == 0)
             {
                 fclose(file);
@@ -309,9 +316,32 @@ bool password_check(char *filename, char *third)
     return false;
 }
 
+int make_key(char *password){
+    int making_key = 0;
+    for(int i = 0;i<strlen(password);i++){
+        making_key += password[i];
+    }
+    key = making_key;
+}
+
+void encrypt(char *third){
+    int key1 = make_key(key);
+    for(int i = 0;i<strlen(third); i++){
+        third[i] = third[i] + key;
+    }
+}
+
+void decrypt(char *third){
+    int key1 = make_key(key);
+    for(int i = 0;i<strlen(third); i++){
+        third[i] = third[i] - key;
+    }
+}
+
 void password_save(char *filename, char *first, char *second, char *third)
 {
     FILE *file = fopen(filename, "a+");
+    encrypt(third);
     fprintf(file, "%s||%s||%s\n", first, second, third);
     fclose(file);
 }
@@ -367,6 +397,7 @@ void retrieve_password(char *filename, char *website, char *username, char *pass
         {
             if (strcmp(website2, website) == 0 && strcmp(username2, username) == 0)
             {
+                decrypt(password2);
                 printf("website : %s , Username : %s , Password : %s\n", website2, username2, password2);
                 fclose(file);
                 return;
@@ -431,7 +462,7 @@ int main()
 
     char filename[100] = "user.txt";
 
-    if (choice == 1)
+    if(choice == 1)
     {
         operationResult = systemusername(system_username);
         attempts = 1;
@@ -503,6 +534,9 @@ int main()
         }
     }
 
+    // makeing key
+    make_key(system_password);
+
     // naming the file for the user to store passwords
     char file[100];
     strcpy(file, system_username);
@@ -511,6 +545,7 @@ int main()
     // creating a file if it doesn't exist
     FILE *file2 = fopen(file, "a+");
     fclose(file2);
+
 
 
     while (1)
