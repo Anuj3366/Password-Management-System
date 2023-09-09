@@ -316,22 +316,23 @@ bool password_check(char *filename, char *third)
     return false;
 }
 
-int make_key(char *password){
+int make_key(char *password) {
     int making_key = 0;
-    for(int i = 0;i<strlen(password);i++){
+    for (int i = 0; i < strlen(password); i++) {
         making_key += password[i];
     }
     key = making_key;
+    return key;
 }
 
-void encrypt(char *third){
-    for(int i = 0;i<strlen(third); i++){
+void encrypt(char *third) {
+    for (int i = 0; i < strlen(third); i++) {
         third[i] = third[i] + key;
     }
 }
 
-void decrypt(char *third){
-    for(int i = 0;i<strlen(third); i++){
+void decrypt(char *third) {
+    for (int i = 0; i < strlen(third); i++) {
         third[i] = third[i] - key;
     }
 }
