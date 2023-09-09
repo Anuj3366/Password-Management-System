@@ -25,6 +25,8 @@ int systemusername(char *system_username)
     FILE *file = fopen("user.txt", "a+");
     printf("Please enter your system's username: ");
     scanf("%s", system_username);
+    while (getchar() != '\n')
+        ; // Consume characters until a newline is encountered
     fprintf(file, "%s", system_username);
     fclose(file);
     return 0;
@@ -32,15 +34,17 @@ int systemusername(char *system_username)
 
 int systempassword(char *system_password)
 {
-    printf("Please enter your system password. It should only consist of numbers and should not be shared as it is used to encrypt and decrypt your passwords: ");
+    printf("Please enter your system's password: ");
     scanf("%s", system_password);
+    while (getchar() != '\n')
+        ; // Consume characters until a newline is encountered
     return 0;
 }
 
 void user_save(char *filename, char *first, char *second)
 {
     FILE *file = fopen(filename, "a+");
-    fprintf(file, "%s||%s\n", first, second);
+    fprintf(file, "%s||%s||\n", first, second);
     fclose(file);
 }
 
@@ -48,6 +52,8 @@ int enter_website(char *website)
 {
     printf("Enter the website's URL: ");
     scanf("%s", website);
+    while (getchar() != '\n')
+        ; // Consume characters until a newline is encountered
     if (strcmp(website, "exit") == 0)
     {
         printf("\nExiting...\n");
@@ -59,6 +65,8 @@ int enter_website(char *website)
         printf("\nThe website's URL is not valid. Please enter a valid website's URL.\n");
         printf("Enter the website's URL: ");
         scanf("%s", website);
+        while (getchar() != '\n')
+            ; // Consume characters until a newline is encountered
         if (strcmp(website, "exit") == 0)
         {
             printf("\nExiting...\n");
@@ -79,6 +87,8 @@ int enter_username(char *filename, char *website, char *username, char *password
 {
     printf("Enter the Username : ");
     scanf("%s", username);
+    while (getchar() != '\n')
+        ; // Consume characters until a newline is encountered
     if (strcmp(username, "exit") == 0)
     {
         printf("\nExiting...\n");
@@ -90,6 +100,8 @@ int enter_username(char *filename, char *website, char *username, char *password
         printf("Enter your choice : ");
         int choice;
         scanf("%d", &choice);
+        while (getchar() != '\n')
+            ; // Consume characters until a newline is encountered
         if (choice == 1)
         {
             return 0;
@@ -107,6 +119,8 @@ int enter_password(char *filename, char *website, char *username, char *password
 {
     printf("Enter the Password (Minimum 8 to 99 characters with Capital letter ,Small letters, digits, and special characters): ");
     scanf("%s", password);
+    while (getchar() != '\n')
+        ; // Consume characters until a newline is encountered
     if (strcmp(password, "exit") == 0)
     {
         printf("\nExiting...\n");
@@ -116,6 +130,8 @@ int enter_password(char *filename, char *website, char *username, char *password
     {
         printf("\nInvalid input or password already exists, please enter a valid password or write exit to exit : ");
         scanf("%s", password);
+        while (getchar() != '\n')
+            ; // Consume characters until a newline is encountered
         if (strcmp(password, "exit") == 0)
         {
             printf("\nExiting...\n");
@@ -363,6 +379,8 @@ void retrieve_password(char *filename, char *website, char *username, char *pass
     int choice;
     printf("Enter your choice : ");
     scanf("%d", &choice);
+    while (getchar() != '\n')
+        ; // Consume characters until a newline is encountered
     if (choice == 1)
     {
         generate_password(filename, website, username, password);
@@ -380,27 +398,39 @@ int main()
     printf("\033[1mWould you like to:\033[0m\n");
     printf("1. Create a new account\n");
     printf("2. Log in to an existing account\n\n");
-    printf("\033[1mEnter your choice (1 or 2): \033[0m");
 
+    int operationResult; // creating a variable to store the result of the operation
     int choice;
     int attempts = 0;
     while (1)
     {
+        printf("\033[1m\nEnter your choice (1 or 2): \033[0m");
+        attempts++;
         if (scanf("%d", &choice) != 1 || (choice != 1 && choice != 2))
         {
-            printf("\033[1mInvalid input. Please enter a valid choice (1 or 2):\033[0m\n");
-            attempts++;
-            if (attempts == 5)
+            if (strcmp("exit", &choice) == 0)
             {
-                printf("You've entered an invalid input 5 times. It seems you might be having difficulty. Please try again later.\n");
+                printf("\nExiting...\n");
                 return 0;
             }
+
+            while (getchar() != '\n')
+                ; // Consume characters until a newline is encountered
+            if (attempts == 5)
+            {
+                printf("\033[1m\nYou've entered an invalid input 5 times. It seems you might be having difficulty. Please try again later.\033[0m \n");
+                exit(0);
+            }
+
+            printf("\033[1m\nInvalid input. valid choice are (1 or 2)\033[0m ");
         }
         else
         {
             break;
         }
     }
+
+    printf("\n");
 
     char system_username[100]; // = "user";
     char system_password[100]; // = "1234";
@@ -409,76 +439,72 @@ int main()
 
     if (choice == 1)
     {
-        systemusername(system_username);
+        operationResult = systemusername(system_username);
         attempts = 1;
         while (username_check(filename, system_username))
         {
-            printf("Username already exists.\n");
-            printf("Enter a different username: ");
-            scanf("%s", system_username);
-            attempts++;
             if (attempts == 5)
             {
                 printf("You've entered an invalid input 5 times. It seems you might be having difficulty. Please try again later.\n");
                 return 0;
             }
+            printf("Username already exists.");
+            operationResult = systemusername(system_username);
+            attempts++;
         }
-        systempassword(system_password);
-        attempts = 1;
+        attempts = 0;
+        printf("\nWARNING your password should only consist of positive numbers and should not be shared as it is used to encrypt and decrypt your passwords. WARNING\n");
         while (1)
         {
-            for (int i = 0; i < strlen(system_password); i++)
+            if (attempts == 5)
+            {
+                printf("You've entered an invalid input 5 times. It seems you might be having difficulty. Please try again later.\n");
+                exit(0);
+            }
+            operationResult = systempassword(system_password);
+            attempts++;
+            int i;
+            for (i = 0; i < strlen(system_password); i++)
             {
                 if (system_password[i] < '0' || system_password[i] > '9' || strlen(system_password) < 4)
                 {
-                    printf("Invalid input. Please enter a valid password: ");
-                    scanf("%s", system_password);
-                    attempts++;
-                    if (attempts == 5)
-                    {
-                        printf("You've entered an invalid input 5 times. It seems you might be having difficulty. Please try again later.\n");
-                        exit(0);
-                    }
+                    printf("\nInvalid input.");
                     break;
                 }
+            }
+            if (i == strlen(system_password))
+            {
+                break;
             }
         }
         user_save(filename, system_username, system_password);
     }
     else
     {
-        systemusername(system_username);
+        operationResult = systemusername(system_username);
         attempts = 1;
         while (!username_check(filename, system_username))
         {
-            printf("Username does not exist.\n");
-            printf("Enter a different username: ");
-            scanf("%s", system_username);
-            attempts++;
             if (attempts == 5)
             {
                 printf("You've entered an invalid input 5 times. It seems you might be having difficulty. Please try again later.\n");
                 return 0;
             }
+            printf("Username does not exist.");
+            operationResult = systemusername(system_username);
+            attempts++;
         }
-        systempassword(system_password);
-        attempts = 1;
+        attempts = 0;
         while (1)
         {
-            for (int i = 0; i < strlen(system_password); i++)
+            operationResult = systempassword(system_password);
+            if (password_check(filename, system_password))
             {
-                if (system_password[i] < '0' || system_password[i] > '9' || strlen(system_password) < 4)
-                {
-                    printf("Invalid input. Please enter a valid password: ");
-                    scanf("%s", system_password);
-                    attempts++;
-                    if (attempts == 5)
-                    {
-                        printf("You've entered an invalid input 5 times. It seems you might be having difficulty. Please try again later.\n");
-                        exit(0);
-                    }
-                    break;
-                }
+                break;
+            }
+            else
+            {
+                printf("\nInvalid password.");
             }
         }
     }
@@ -492,7 +518,6 @@ int main()
     FILE *file2 = fopen(file, "a+");
     fclose(file2);
 
-    int operationResult; // creating a variable to store the result of the operation
 
     while (1)
     {
@@ -510,6 +535,8 @@ int main()
             printf("Exiting...\n");
             return 0;
         }
+        while (getchar() != '\n')
+            ; // Consume characters until a newline is encountered
 
         printf("\n");
 
@@ -530,17 +557,17 @@ int main()
             {
                 break;
             }
-            operationResult = enter_username(file,website, username, password);
+            operationResult = enter_username(file, website, username, password);
             if (operationResult == 1)
             {
                 break;
             }
-            operationResult = enter_password(file,website, username, password);
+            operationResult = enter_password(file, website, username, password);
             if (operationResult == 1)
             {
                 break;
             }
-            password_save(file,website, username, password);
+            password_save(file, website, username, password);
             break;
         case 2:
             // Viewing an existing password
@@ -551,7 +578,9 @@ int main()
             }
             printf("Enter the Username : ");
             scanf("%s", username);
-            retrieve_password(file,website, username, password);
+            while (getchar() != '\n')
+                ; // Consume characters until a newline is encountered
+            retrieve_password(file, website, username, password);
             break;
         case 3:
             // Generating a new strong password
@@ -560,13 +589,13 @@ int main()
             {
                 break;
             }
-            operationResult = enter_username(file,website, username, password);
+            operationResult = enter_username(file, website, username, password);
             if (operationResult == 1)
             {
                 break;
             }
             printf("Generating Password...\n");
-            generate_password(file,website, username, password);
+            generate_password(file, website, username, password);
             break;
         default:
             // Exiting on an unknown choice
