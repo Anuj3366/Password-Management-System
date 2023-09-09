@@ -2,11 +2,12 @@
 
 ## Overview
 
-The Password Management System is a command-line tool that allows users to securely manage their website passwords. It provides the following features:
+The Password Management System is a command-line tool that allows users to securely manage their website passwords. Please note that this program is intended for demonstration purposes only and is not suitable for production use. It provides the following features:
 
-- **Saving Passwords:** Users can save passwords associated with specific websites and usernames.
-- **Viewing Passwords:** Users can retrieve and view stored passwords for their websites.
-- **Generating Strong Passwords:** The system can generate strong passwords for users to use.
+- **User Account Management:** Users can create new accounts or log in to existing ones.
+- **Password Storage:** Store passwords securely using encryption.
+- **Password Retrieval:** Retrieve stored passwords for websites.
+- **Strong Password Generation:** Generate strong passwords for use.
 
 ## Getting Started
 
@@ -27,7 +28,6 @@ To run the Password Management System, you'll need:
    ```
 
 2. Compile the program using your C compiler:
-   (You can skip this step in most cases)
 
    ```bash
    gcc main.c -o password_management_system
@@ -47,55 +47,52 @@ To use the Password Management System, follow these steps:
 
    ```
    Please select an option:
-   To exit, type Anything or 0. You can also type "exit" at any time to return to this menu.
-   1. Save a new password (Press 1).
-   2. View an existing stored password (Press 2).
-   3. Generate a new strong password (Press 3).
+   To exit, type 'exit' at any time to return to this menu.
+   1. Create a new account (Press 1).
+   2. Log in to an existing account (Press 2).
    ```
 
 3. Choose an option by entering the corresponding number and following the prompts.
-   
-4. Next there will be various prompts according to the choice you made or value you entered, but I warn you to first read instructions only and then continue forward.
+
+4. For new accounts, you'll be prompted to create a username and a password. Please note that your password should consist only of positive numbers and should not be shared, as it is used to encrypt and decrypt your passwords.
+
+5. Once logged in, you can choose to save new passwords, view existing stored passwords, or generate strong passwords.
 
 ## Features
 
-### Saving a New Password
+### User Account Management
 
-- Enter the website's URL.
-- Enter the username.
-- Enter the password (8-10 characters with letters, digits, and special characters).
+- Create a new account with a unique username and password.
+- Log in to an existing account.
 
-### Viewing an Existing Password
+### Password Storage
 
-- Enter the website's URL.
-- Enter the username.
-- The system will display the stored password for the given website and username.
+- Store passwords securely using encryption.
 
-### Generating a Strong Password
+### Password Retrieval
 
-- Enter the website's URL.
-- Enter the username.
-- The system will generate a strong password and display it.
+- Retrieve stored passwords for websites.
+
+### Strong Password Generation
+
+- Generate strong passwords for use.
 
 ## Security
 
-- Passwords are stored in a file (`passwords.xls`) on your local machine.
+- Passwords are stored securely using encryption.
 - Passwords, URLs, and usernames are case-sensitive.
-- The system checks for password strength and ensures uniqueness.
 
 ## License
 
-This project is solely made and designed by Anuj Garg
+This project is solely made and designed by Anuj Garg.
 
 ---
 
-### Remaining Task
+### Remaining Tasks
 
-#### Add privacy while writing passwords, no one can see what you wrote (Will try it later because Windows and Linux require different libraries to be imported and not touched those yet)
+- Enhance privacy measures while writing passwords.
+- Implement further encryption and decryption options for saved passwords.
+- Add HTML compatibility and improve the user interface.
+- Provide an option to import encrypted passwords to a web browser.
 
-#### Add encryption and decryption to the saved password and give the option to make its key to the user
-
-#### Add a feature where it can work with HTML and looks good
-
-#### Add an encrypted password to the Excel file instead of text and provide an option to import it to the browser
-
+Please note that the program currently works only on Linux-based systems.
